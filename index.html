@@ -36,994 +36,1021 @@ input,select,textarea{font-family:inherit}
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect, useMemo } = React;
-const API_BASE = 'https://skctrlvyhcskskrpmank.supabase.co/functions/v1';
+const { useState, useMemo, useCallback, useRef, useEffect } = React;
 
-// ============= DATA & MOCKING =============
-
-const MOCK_MEMBERS = [
-  {
-    id: '1',
-    name: 'Dr. James Morrison',
-    class: '1985',
-    role: 'Professor of Pharmacology',
-    institution: 'Xavier University',
-    expertise: ['Pharmacodynamics', 'Research'],
-    status: 'Active',
-    location: 'Cincinnati, OH',
-    email: 'jmorrison@xavier.edu',
-    phone: '+1 (513) 745-3000',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop'
-  },
-  {
-    id: '2',
-    name: 'Sarah Chen',
-    class: '2015',
-    role: 'Clinical Pharmacist',
-    institution: 'Cincinnati Children\'s Hospital Medical Center',
-    expertise: ['Pediatric Pharmacy', 'Patient Care'],
-    status: 'Active',
-    location: 'Cincinnati, OH',
-    email: 'schen@cchmc.org',
-    phone: '+1 (513) 636-4200',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop'
-  },
-  {
-    id: '3',
-    name: 'Michael Rodriguez',
-    class: '2010',
-    role: 'Head of Pharmacy Operations',
-    institution: 'Walgreens Regional Center',
-    expertise: ['Operations', 'Management', 'Business Development'],
-    status: 'Active',
-    location: 'Cleveland, OH',
-    email: 'mrodriguez@walgreens.com',
-    phone: '+1 (216) 621-3000',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop'
-  },
-  {
-    id: '4',
-    name: 'Dr. Patricia Williams',
-    class: '1990',
-    role: 'Director of Pharmacy Education',
-    institution: 'University of Cincinnati College of Pharmacy',
-    expertise: ['Education', 'Curriculum Development', 'Mentoring'],
-    status: 'Active',
-    location: 'Cincinnati, OH',
-    email: 'pwilliams@uc.edu',
-    phone: '+1 (513) 558-1700',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop'
-  },
-  {
-    id: '5',
-    name: 'David Kim',
-    class: '2018',
-    role: 'Pharmaceutical Research Scientist',
-    institution: 'Procter & Gamble',
-    expertise: ['Drug Development', 'Research', 'Innovation'],
-    status: 'Active',
-    location: 'Cincinnati, OH',
-    email: 'dkim@pg.com',
-    phone: '+1 (513) 983-1100',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop'
-  },
-  {
-    id: '6',
-    name: 'Jennifer Martinez',
-    class: '2012',
-    role: 'Independent Pharmacy Owner',
-    institution: 'Martinez Family Pharmacy',
-    expertise: ['Entrepreneurship', 'Community Health', 'Patient Counseling'],
-    status: 'Active',
-    location: 'Louisville, KY',
-    email: 'jen@martinezpharm.com',
-    phone: '+1 (502) 589-3000',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop'
-  },
-  {
-    id: '7',
-    name: 'Dr. Christopher Lee',
-    class: '1995',
-    role: 'VP of Medical Affairs',
-    institution: 'Eli Lilly and Company',
-    expertise: ['Medical Affairs', 'Clinical Science', 'Regulatory'],
-    status: 'Active',
-    location: 'Indianapolis, IN',
-    email: 'clee@lilly.com',
-    phone: '+1 (317) 276-2000',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop'
-  },
-  {
-    id: '8',
-    name: 'Amanda Johnson',
-    class: '2016',
-    role: 'Pharmacy Technician Supervisor',
-    institution: 'UK HealthCare',
-    expertise: ['Technician Support', 'Workflow Management', 'Training'],
-    status: 'Active',
-    location: 'Lexington, KY',
-    email: 'ajohnson@ukhealthcare.org',
-    phone: '+1 (859) 323-5000',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop'
-  },
-  {
-    id: '9',
-    name: 'Dr. Marcus Thompson',
-    class: '1988',
-    role: 'Dean, College of Pharmacy',
-    institution: 'University of Louisville',
-    expertise: ['Education', 'Administration', 'Accreditation'],
-    status: 'Active',
-    location: 'Louisville, KY',
-    email: 'm.thompson@louisville.edu',
-    phone: '+1 (502) 852-6000',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop'
-  },
-  {
-    id: '10',
-    name: 'Rachel Brown',
-    class: '2020',
-    role: 'Pharmaceutical Sales Representative',
-    institution: 'Abbott Pharmaceuticals',
-    expertise: ['Sales', 'Customer Relations', 'Market Knowledge'],
-    status: 'Active',
-    location: 'Columbus, OH',
-    email: 'rbrown@abbott.com',
-    phone: '+1 (614) 624-7000',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop'
-  },
-  {
-    id: '11',
-    name: 'Dr. Thomas Anderson',
-    class: '1992',
-    role: 'Regulatory Affairs Manager',
-    institution: 'FDA',
-    expertise: ['Regulatory Compliance', 'Drug Approval', 'Quality Assurance'],
-    status: 'Active',
-    location: 'Cincinnati, OH',
-    email: 'tanderson@fda.gov',
-    phone: '+1 (513) 679-2700',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop'
-  },
-  {
-    id: '12',
-    name: 'Lisa Garcia',
-    class: '2019',
-    role: 'Hospital Pharmacy Manager',
-    institution: 'Cleveland Clinic',
-    expertise: ['Hospital Operations', 'Team Leadership', 'Quality Control'],
-    status: 'Active',
-    location: 'Cleveland, OH',
-    email: 'lgarcia@clevelandclinic.org',
-    phone: '+1 (216) 444-2000',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop'
-  },
-  {
-    id: '13',
-    name: 'Dr. Anthony Evans',
-    class: '1987',
-    role: 'Chief Medical Officer',
-    institution: 'Cincinnati Health Partners',
-    expertise: ['Medical Leadership', 'Clinical Practice', 'Policy'],
-    status: 'Active',
-    location: 'Cincinnati, OH',
-    email: 'aevans@chp-oh.org',
-    phone: '+1 (513) 721-7000',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop'
-  },
-  {
-    id: '14',
-    name: 'Michelle Taylor',
-    class: '2017',
-    role: 'Medication Safety Officer',
-    institution: 'Mercy Health',
-    expertise: ['Patient Safety', 'Quality Improvement', 'Error Prevention'],
-    status: 'Active',
-    location: 'Toledo, OH',
-    email: 'mtaylor@mercy.org',
-    phone: '+1 (419) 469-4000',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop'
-  },
-  {
-    id: '15',
-    name: 'Dr. Robert Mitchell',
-    class: '1993',
-    role: 'Professor and Researcher',
-    institution: 'Michigan State University College of Pharmacy',
-    expertise: ['Pharmaceutical Sciences', 'Research', 'Academia'],
-    status: 'Active',
-    location: 'East Lansing, MI',
-    email: 'rmitchell@msu.edu',
-    phone: '+1 (517) 353-1700',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop'
-  },
-  {
-    id: '16',
-    name: 'Emily Nelson',
-    class: '2021',
-    role: 'Clinical Pharmacy Resident',
-    institution: 'Indiana University Health',
-    expertise: ['Clinical Pharmacy', 'Patient Care', 'Education'],
-    status: 'Active',
-    location: 'Indianapolis, IN',
-    email: 'enelson@iuhealth.org',
-    phone: '+1 (317) 962-5000',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop'
-  },
-  {
-    id: '17',
-    name: 'Dr. Kevin White',
-    class: '1998',
-    role: 'Head of Pharmacy Affairs',
-    institution: 'AmerisourceBergen',
-    expertise: ['Pharmacy Services', 'Business Development', 'Supply Chain'],
-    status: 'Active',
-    location: 'Columbus, OH',
-    email: 'kwhite@amerisourcebergen.com',
-    phone: '+1 (614) 827-8800',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop'
-  },
-  {
-    id: '18',
-    name: 'Victoria Clark',
-    class: '2014',
-    role: 'Long-Term Care Pharmacy Director',
-    institution: 'Omnicare',
-    expertise: ['Long-Term Care', 'Geriatric Pharmacy', 'Compliance'],
-    status: 'Active',
-    location: 'Columbus, OH',
-    email: 'vclark@omnicare.com',
-    phone: '+1 (614) 228-8190',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop'
-  },
-  {
-    id: '19',
-    name: 'Dr. Daniel Foster',
-    class: '1997',
-    role: 'Associate Professor of Pharmacology',
-    institution: 'Ohio State University',
-    expertise: ['Pharmacology', 'Drug Development', 'Education'],
-    status: 'Active',
-    location: 'Columbus, OH',
-    email: 'dfoster@osu.edu',
-    phone: '+1 (614) 292-5000',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop'
-  },
-  {
-    id: '20',
-    name: 'Stephanie Cohen',
-    class: '2022',
-    role: 'Ambulatory Care Pharmacist',
-    institution: 'University of Michigan Health',
-    expertise: ['Ambulatory Care', 'Patient Counseling', 'Disease Management'],
-    status: 'Active',
-    location: 'Ann Arbor, MI',
-    email: 'scohen@umich.edu',
-    phone: '+1 (734) 764-1817',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop'
-  },
-  {
-    id: '21',
-    name: 'Dr. Jonathan Price',
-    class: '1996',
-    role: 'Clinical Advisor',
-    institution: 'Pharmacovigilance Solutions',
-    expertise: ['Drug Safety', 'Adverse Event Reporting', 'Compliance'],
-    status: 'Active',
-    location: 'Chicago, IL',
-    email: 'jprice@pharmavig.com',
-    phone: '+1 (312) 443-6000',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop'
-  },
-  {
-    id: '22',
-    name: 'Angela Torres',
-    class: '2018',
-    role: 'Specialty Pharmacy Coordinator',
-    institution: 'CVS/Aetna Specialty Pharmacy',
-    expertise: ['Specialty Pharmacy', 'Patient Support', 'Prior Authorizations'],
-    status: 'Active',
-    location: 'Wooster, OH',
-    email: 'atorres@cvs.com',
-    phone: '+1 (330) 264-8000',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop'
-  },
-  {
-    id: '23',
-    name: 'Dr. Gregory Hayes',
-    class: '1999',
-    role: 'Professor of Pharmacy Practice',
-    institution: 'Purdue University College of Pharmacy',
-    expertise: ['Pharmacy Practice', 'Curriculum Design', 'Accreditation'],
-    status: 'Active',
-    location: 'West Lafayette, IN',
-    email: 'ghayes@purdue.edu',
-    phone: '+1 (765) 494-1700',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop'
-  },
-  {
-    id: '24',
-    name: 'Brittany Lewis',
-    class: '2020',
-    role: 'Immunization Pharmacist',
-    institution: 'Kroger Pharmacy',
-    expertise: ['Immunizations', 'Vaccination Programs', 'Patient Education'],
-    status: 'Active',
-    location: 'Cincinnati, OH',
-    email: 'blewis@kroger.com',
-    phone: '+1 (513) 579-2700',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop'
-  },
-  {
-    id: '25',
-    name: 'Dr. Edward Schmidt',
-    class: '1994',
-    role: 'Director of Clinical Services',
-    institution: 'Medical University of South Carolina',
-    expertise: ['Clinical Services', 'Research', 'Patient Care'],
-    status: 'Active',
-    location: 'Charleston, SC',
-    email: 'eschmidt@musc.edu',
-    phone: '+1 (843) 792-0000',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop'
-  },
-  {
-    id: '26',
-    name: 'Carolyn Murphy',
-    class: '2019',
-    role: 'Pharmacy Manager - Operations',
-    institution: 'Target Pharmacy Services',
-    expertise: ['Operations', 'Inventory Management', 'Staff Development'],
-    status: 'Active',
-    location: 'Minneapolis, MN',
-    email: 'cmurphy@target.com',
-    phone: '+1 (612) 696-6000',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop'
-  },
-  {
-    id: '27',
-    name: 'Dr. Paul Garrett',
-    class: '2000',
-    role: 'Senior Clinical Specialist',
-    institution: 'Novo Nordisk',
-    expertise: ['Clinical Support', 'Diabetes Care', 'Patient Management'],
-    status: 'Active',
-    location: 'Plainsboro, NJ',
-    email: 'pgarrett@novonordisk.com',
-    phone: '+1 (609) 987-5000',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop'
-  },
-  {
-    id: '28',
-    name: 'Nicole Hall',
-    class: '2021',
-    role: 'Psychiatric Pharmacist',
-    institution: 'Western Psychiatric Hospital',
-    expertise: ['Psychiatric Pharmacy', 'Mental Health', 'Patient Care'],
-    status: 'Active',
-    location: 'Pittsburgh, PA',
-    email: 'nhall@upmc.edu',
-    phone: '+1 (412) 624-3000',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop'
-  },
-  {
-    id: '29',
-    name: 'Dr. Benjamin Hughes',
-    class: '1991',
-    role: 'Chief Pharmacy Officer',
-    institution: 'Ascension Health',
-    expertise: ['Pharmacy Leadership', 'Healthcare Administration', 'Strategic Planning'],
-    status: 'Active',
-    location: 'St. Louis, MO',
-    email: 'bhughes@ascension.org',
-    phone: '+1 (314) 747-9000',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop'
-  },
-  {
-    id: '30',
-    name: 'Jasmine Patterson',
-    class: '2022',
-    role: 'MTM (Medication Therapy Management) Specialist',
-    institution: 'Blue Cross Blue Shield',
-    expertise: ['MTM Services', 'Chronic Disease Management', 'Clinical Support'],
-    status: 'Active',
-    location: 'Indianapolis, IN',
-    email: 'jpatterson@bcbs.org',
-    phone: '+1 (317) 488-6000',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop'
-  },
-  {
-    id: '31',
-    name: 'Dr. William Sullivan',
-    class: '1989',
-    role: 'VP of Pharmaceutical Development',
-    institution: 'Mylan N.V.',
-    expertise: ['Drug Development', 'Generic Pharma', 'Global Operations'],
-    status: 'Active',
-    location: 'Canonsburg, PA',
-    email: 'wsullivan@mylan.com',
-    phone: '+1 (724) 514-1800',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop'
-  },
-  {
-    id: '32',
-    name: 'Megan Foster',
-    class: '2020',
-    role: 'Oncology Pharmacist',
-    institution: 'Moffitt Cancer Center',
-    expertise: ['Oncology', 'Cancer Treatment', 'Patient Support'],
-    status: 'Active',
-    location: 'Tampa, FL',
-    email: 'mfoster@moffitt.org',
-    phone: '+1 (813) 745-1200',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop'
-  },
-  {
-    id: '33',
-    name: 'Dr. Charles Newman',
-    class: '2001',
-    role: 'Regulatory Science Manager',
-    institution: 'Global Regulatory Solutions',
-    expertise: ['Regulatory Affairs', 'Compliance', 'Quality Systems'],
-    status: 'Active',
-    location: 'Bethesda, MD',
-    email: 'cnewman@grs-pharma.com',
-    phone: '+1 (301) 881-0100',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop'
-  },
-  {
-    id: '34',
-    name: 'Diana Russell',
-    class: '2019',
-    role: 'Pharmacoeconomics Analyst',
-    institution: 'OptumRx',
-    expertise: ['Pharmacoeconomics', 'Health Economics', 'Outcomes Research'],
-    status: 'Active',
-    location: 'Minnetonka, MN',
-    email: 'drussell@optumrx.com',
-    phone: '+1 (952) 931-6000',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop'
-  }
+// ─── DATA ───────────────────────────────────────────────────────────
+const PHARMACY_FIELDS = [
+  "Community Pharmacy","Hospital / Health-System","Clinical Pharmacy",
+  "Pharmaceutical Industry","Managed Care","Ambulatory Care",
+  "Nuclear Pharmacy","Compounding","Oncology Pharmacy",
+  "Psychiatric Pharmacy","Pediatric Pharmacy","Geriatric Pharmacy",
+  "Informatics","Regulatory Affairs","Academia / Research",
+  "Public Health Pharmacy","Long-Term Care","Home Infusion",
+  "Veterinary Pharmacy","Military Pharmacy","Consultant Pharmacy",
+  "Pharmacovigilance","Medical Affairs","PBM / Insurance"
 ];
 
-// Survey responses data
-const SURVEY_RESULTS = {
-  totalRespondents: 34,
-  satisfactionScore: 4.6,
-  recommendationRate: 94,
-  engagementRate: 78,
-  keyTopics: [
-    { topic: 'Career Development', interest: 88 },
-    { topic: 'Networking Opportunities', interest: 91 },
-    { topic: 'Continuing Education', interest: 85 },
-    { topic: 'Industry Updates', interest: 79 },
-    { topic: 'Alumni Mentorship', interest: 76 },
-    { topic: 'Job Opportunities', interest: 82 }
-  ],
-  regions: [
-    { region: 'Ohio', count: 16 },
-    { region: 'Indiana', count: 8 },
-    { region: 'Kentucky', count: 4 },
-    { region: 'Michigan', count: 2 },
-    { region: 'Pennsylvania', count: 2 },
-    { region: 'Other States', count: 2 }
-  ],
-  sectors: [
-    { sector: 'Hospital/Health Systems', count: 8 },
-    { sector: 'Retail/Chain Pharmacy', count: 6 },
-    { sector: 'Pharmaceutical Industry', count: 7 },
-    { sector: 'Academia/Education', count: 6 },
-    { sector: 'Independent Pharmacy', count: 3 },
-    { sector: 'Other', count: 4 }
-  ]
+const COMPANIES = [
+  "CVS Health","Walgreens","Ochsner Health","Rite Aid","HCA Healthcare",
+  "UnitedHealth Group","Cigna","Humana","Express Scripts","OptumRx",
+  "Pfizer","Johnson & Johnson","Merck","AbbVie","Bristol-Myers Squibb",
+  "Amgen","Eli Lilly","Novo Nordisk","AstraZeneca","GSK",
+  "St. Jude Children's Research Hospital","Tulane Medical Center",
+  "LCMC Health","Children's Hospital New Orleans","VA Medical Center",
+  "Xavier University of Louisiana","FDA","CDC","NIH","Rite Aid",
+  "Walmart Pharmacy","Costco Pharmacy","Kroger Health","Amazon Pharmacy",
+  "Capsule","PillPack","Alto Pharmacy"
+];
+
+const POSITIONS = [
+  "Staff Pharmacist","Clinical Pharmacist","Pharmacy Manager",
+  "Director of Pharmacy","VP of Pharmacy Operations","Chief Pharmacy Officer",
+  "Pharmacist in Charge","Clinical Coordinator","Drug Safety Associate",
+  "Medical Science Liaison","Pharmacy Informaticist","Research Scientist",
+  "Professor","Associate Professor","Resident (PGY1)","Resident (PGY2)",
+  "Fellow","Pharmacy Technician Supervisor","Regulatory Affairs Specialist",
+  "Pharmacovigilance Manager","Formulary Analyst","MTM Pharmacist",
+  "Ambulatory Care Pharmacist","Oncology Pharmacist","Pediatric Pharmacist"
+];
+
+const GRAD_YEARS = Array.from({length:30},(_,i)=>2026-i);
+
+const ADDITIONAL_ROLES = [
+  "Realtor","Photographer","Author","DJ","Music Producer","Personal Trainer",
+  "Life Coach","Financial Advisor","Mentor","Public Speaker","Content Creator",
+  "Entrepreneur","Consultant","Podcast Host","Nonprofit Founder","Baker/Chef",
+  "Fashion Designer","Event Planner","Tutor","Motivational Speaker","Investor",
+  "Brand Ambassador","YouTuber","Interior Designer","Fitness Coach","Nutritionist",
+  "Social Media Manager","Graphic Designer","Voice Actor","Film Producer","Travel Blogger"
+];
+
+
+// Real PAG member names from GroupMe (326 members)
+// Professional data is placeholder — will be replaced as members update their profiles
+const REAL_MEMBERS = [
+  {f:"Lisa",l:"Wilkerson",y:1993},{f:"Kris",l:"Spears",y:null},{f:"Krystene",l:"Woodard",y:1996},
+  {f:"Robin",l:"Vidal",y:null},{f:"Rosiland",l:"Burton",y:null},{f:"A.",l:"Hogan-Williams",y:null},
+  {f:"Adrienne",l:"Johnson",y:null},{f:"Adrienne",l:"T.",y:null},{f:"Alayne",l:"Alozie",y:null},
+  {f:"Alessandra",l:"Thompson",y:null},{f:"Alexis",l:"Omari",y:null},{f:"Alisha",l:"Patterson",y:null},
+  {f:"Alisha",l:"Reed",y:null},{f:"Aliya",l:"Brown",y:null},{f:"Allegra",l:"Fadeyi",y:null},
+  {f:"Alvin",l:"Blackmon",y:null},{f:"Ambra",l:"Hannah",y:null},{f:"Anasa",l:"",y:1997},
+  {f:"Andrea",l:"Collier Johnson",y:null},{f:"Angele",l:"White",y:null},{f:"Anika",l:"Bell",y:null},
+  {f:"Anisa",l:"Browning",y:null},{f:"Ann",l:"Grimmette",y:null},{f:"Antoinette",l:"Marks",y:1989},
+  {f:"April",l:"Adams",y:null},{f:"April",l:"Bolden",y:null},{f:"Arian",l:"Lemon",y:null},
+  {f:"Ariel",l:"",y:null},{f:"Arnette",l:"Cordova",y:null},{f:"Ayana",l:"Henderson",y:null},
+  {f:"Bernard",l:"Hill",y:2015},{f:"Brandon",l:"Edgerson",y:null},{f:"Breannie",l:"Charles",y:null},
+  {f:"Bridgit",l:"Maniger",y:null},{f:"Britney",l:"Woods",y:null},{f:"Brittany",l:"Bush",y:null},
+  {f:"Calvin",l:"Magee",y:null},{f:"Candice",l:"Montgomery Pankey",y:null},{f:"Carl",l:"Dawson",y:null},
+  {f:"Carnecia",l:"Greene",y:null},{f:"Cassandra",l:"Penny",y:null},{f:"Cedric",l:"Cloud",y:null},
+  {f:"Cedric",l:"Torry",y:null},{f:"Ceressa",l:"Ward",y:null},{f:"Chandra",l:"Howell",y:null},
+  {f:"Chandra",l:"Green",y:null},{f:"Chandra",l:"McGowan",y:null},{f:"Chanel",l:"Bennett",y:null},
+  {f:"Charles",l:"M.",y:null},{f:"Chelsea",l:"Smith",y:null},{f:"China",l:"Stewart",y:null},
+  {f:"Chris",l:"Johnson",y:null},{f:"Christina",l:"Brooks",y:null},{f:"Christina",l:"Victor",y:null},
+  {f:"Cindy",l:"H.",y:null},{f:"Cori",l:"Brock Cooper",y:null},{f:"Courtney",l:"Chavis",y:null},
+  {f:"Cre",l:"",y:null},{f:"Crystal",l:"Cleveland",y:null},{f:"Crystal",l:"Mitchell",y:null},
+  {f:"Daina",l:"Nelson",y:null},{f:"Dale",l:"Martin",y:null},{f:"Dana",l:"McDade",y:null},
+  {f:"Danielle",l:"Davis",y:null},{f:"Danielle",l:"Keith",y:null},{f:"Danielle",l:"Nwigwe",y:null},
+  {f:"Danique",l:"Richard",y:null},{f:"Dante",l:"D.",y:null},{f:"Dawn",l:"L.R.",y:null},
+  {f:"Dawn",l:"Purcell",y:null},{f:"Da'Sha",l:"Richard",y:null},{f:"Deirdre",l:"Mallet",y:null},
+  {f:"Del",l:"McKnight",y:null},{f:"Deloris",l:"Mabins",y:null},{f:"Delphine",l:"Adams",y:null},
+  {f:"Delveatra",l:"Clements",y:null},{f:"Demorea",l:"Harper",y:null},{f:"Denise",l:"Coleman",y:null},
+  {f:"Devin",l:"Hawkins",y:null},{f:"Devita",l:"Barnes",y:null},{f:"Diamond",l:"Scott",y:null},
+  {f:"Diana",l:"Toogood",y:null},{f:"Donna",l:"Herbert",y:null},{f:"NaShawnda",l:"Thomas",y:null},
+  {f:"Felecia",l:"",y:null},{f:"Brionne",l:"Bush",y:null},{f:"Chelsea",l:"Amerson",y:null},
+  {f:"Christina",l:"Bolden White",y:null},{f:"Danielle",l:"Hampton",y:null},
+  {f:"Dionne",l:"Payne",y:null},{f:"Gia",l:"McLean",y:null},{f:"Jade",l:"Parker",y:null},
+  {f:"Jarryn",l:"Cleaves",y:null},{f:"Katashia",l:"Partee Kendrick",y:null},
+  {f:"Lakeisha",l:"Jackson-Patton",y:null},{f:"Porscha",l:"Showers",y:null},
+  {f:"Ravin",l:"Milton",y:null},{f:"Tonya",l:"Thomas-Blackman",y:null},
+  {f:"Willene",l:"Haywood",y:null},{f:"Phaedra",l:"Jordan",y:null},{f:"Stacie",l:"Williams",y:null},
+  {f:"Eden",l:"Keller",y:null},{f:"Edward",l:"Stemley",y:null},{f:"Elicia",l:"",y:null},
+  {f:"Emma",l:"Aristide",y:null},{f:"Eric",l:"Slater",y:null},{f:"Erica",l:"Chavis",y:null},
+  {f:"Erica",l:"Hall",y:null},{f:"Ericka",l:"Lassair",y:null},{f:"Erika",l:"G.",y:null},
+  {f:"Erika",l:"Wilson",y:null},{f:"Erin",l:"Searles",y:null},{f:"Ernest",l:"L.",y:null},
+  {f:"Felicia",l:"Aron",y:null},{f:"Felicia",l:"Macon",y:null},{f:"Felicia",l:"Townsel",y:null},
+  {f:"Genee'",l:"Schexnayder",y:null},{f:"Genella",l:"Slater",y:null},{f:"General",l:"Peay",y:null},
+  {f:"George",l:"Clayton",y:null},{f:"Gerald",l:"Evans",y:null},{f:"Geralyn",l:"Magee Isaac",y:null},
+  {f:"Germaine",l:"",y:null},{f:"Germaine",l:"Croom",y:null},{f:"Glen",l:"Dace II",y:1995},
+  {f:"Glenn",l:"Wilson",y:null},{f:"Greer",l:"Adams",y:null},{f:"India",l:"",y:null},
+  {f:"Inga",l:"Collins",y:null},{f:"Jami",l:"C.",y:null},{f:"Janel",l:"Bailey Wheeler",y:null},
+  {f:"Jasmine",l:"B.",y:null},{f:"Jasmine",l:"Collins",y:null},{f:"Jasmine",l:"W.",y:null},
+  {f:"Jeanine",l:"Plante",y:null},{f:"Jennifer",l:"",y:null},{f:"Jennifer",l:"Willis",y:null},
+  {f:"Jessica",l:"Bolden",y:null},{f:"Jolene",l:"Williams",y:null},{f:"Joni",l:"Freeman",y:null},
+  {f:"Jovande",l:"Young",y:null},{f:"Joyce",l:"Brown",y:null},{f:"Joynell",l:"Bean",y:null},
+  {f:"Kaina",l:"Steward",y:null},{f:"Kareema",l:"Sullivan",y:null},{f:"Karen",l:"Bradley Wells",y:null},
+  {f:"Karen",l:"Whitfield",y:null},{f:"Karon",l:"Hampton",y:null},{f:"Kathleen",l:"Kennedy",y:null},
+  {f:"Katrina",l:"Harper",y:null},{f:"Katrina",l:"Nguyen",y:null},{f:"Keeyan",l:"D.",y:null},
+  {f:"Kei",l:"Culver",y:null},{f:"Keidre",l:"Carter",y:null},{f:"Keisha",l:"Taylor",y:null},
+  {f:"Kelly",l:"L.",y:null},{f:"Kelly",l:"Tillison",y:null},{f:"Ken",l:"",y:null},
+  {f:"Kendra",l:"Forbes",y:null},{f:"Kendra",l:"Lewis",y:null},{f:"Kendra",l:"Prevost",y:null},
+  {f:"Kenya",l:"Muhammad",y:null},{f:"Kenya",l:"Robinson",y:null},{f:"Keri",l:"Smith",y:null},
+  {f:"Keri",l:"Williams",y:null},{f:"Kevin",l:"Clark",y:null},{f:"Kevin",l:"Collins",y:null},
+  {f:"Kiara",l:"James",y:null},{f:"Kim",l:"Graham",y:null},{f:"Kim",l:"Harris",y:null},
+  {f:"Kimberly",l:"Francis",y:null},{f:"Kimberly",l:"Lockett",y:null},{f:"Kimberly",l:"Lyles",y:null},
+  {f:"Kraig",l:"Loyd",y:null},{f:"Kris",l:"Rogers Washington",y:null},{f:"Kristi",l:"Isaac Rapp",y:null},
+  {f:"Kristina",l:"Carter",y:null},{f:"Kyla",l:"Leon",y:null},{f:"Lachelcia",l:"Watts",y:null},
+  {f:"LaKeesha",l:"Zuniga",y:null},{f:"Larna",l:"Atkinson",y:null},{f:"LaShon",l:"Snyder Conerly",y:null},
+  {f:"LaShunda",l:"Green",y:null},{f:"Latasha",l:"Johnson",y:null},{f:"LaTecia",l:"Lewis-Smith",y:null},
+  {f:"Latosha",l:"Hickman Cherry",y:null},{f:"Lauren",l:"Day-Page",y:2014},
+  {f:"La'Kendra",l:"Bell",y:null},{f:"Leah",l:"Miller",y:null},{f:"Leslie",l:"Hill",y:null},
+  {f:"Leslie",l:"Magee",y:null},{f:"Lisa",l:"Abrams Young",y:null},{f:"Lisa",l:"Arnold",y:null},
+  {f:"Lisa",l:"Ray",y:null},{f:"Lishunda",l:"Franklin",y:null},{f:"Lovie",l:"Rodgers",y:null},
+  {f:"Lynette",l:"Dupuy",y:null},{f:"Lynnair",l:"Francis",y:null},{f:"M. Ann",l:"Berry",y:null},
+  {f:"Mac",l:"Armstrong",y:null},{f:"Maliah",l:"Mayweather",y:null},{f:"Malinda",l:"Boucree",y:null},
+  {f:"Maria",l:"Smith",y:null},{f:"Mark",l:"Prevost",y:null},{f:"Mary",l:"Gauthier-Lewis",y:null},
+  {f:"Maureen",l:"Ancar",y:null},{f:"Meagan",l:"Brown",y:null},{f:"Merica",l:"Delaney Lyons",y:null},
+  {f:"Michael",l:"Lowe",y:null},{f:"Michelle",l:"Briscoe",y:null},{f:"Michelle",l:"Easton",y:1993},
+  {f:"Michelle",l:"Hopson",y:null},{f:"Michelle",l:"Lola",y:null},{f:"Missy",l:"Burrell Allain",y:null},
+  {f:"Monica",l:"",y:null},{f:"Monica",l:"Doherty",y:null},{f:"Monica",l:"Fitts Payne",y:null},
+  {f:"Monica",l:"Miles Camp",y:null},{f:"Monica",l:"Varnado",y:null},{f:"Monique",l:"Bell",y:null},
+  {f:"Monique",l:"Lewis",y:null},{f:"Monique",l:"Norwood",y:null},{f:"Musu",l:"Kamara",y:null},
+  {f:"Natasha",l:"Smith",y:null},{f:"Natasha",l:"Walker",y:null},{f:"Nathan",l:"Terrell",y:null},
+  {f:"Nicole",l:"Harris-Walton",y:null},{f:"Niema",l:"Moore",y:null},{f:"Nija",l:"Hawthorne",y:null},
+  {f:"Nikki",l:"Brown",y:null},{f:"Nikki",l:"Robinson",y:null},{f:"Nina",l:"Broussard",y:null},
+  {f:"Nisha",l:"",y:null},{f:"Nolan",l:"Leblanc",y:null},{f:"Dwayne",l:"Steele",y:null},
+  {f:"Oluwakemi",l:"A.",y:null},{f:"Oneka",l:"Barnes",y:null},{f:"P.",l:"Glover",y:null},
+  {f:"Paul",l:"Young",y:null},{f:"Pedie",l:"Horton",y:null},{f:"Phaedra",l:"Howard Honore",y:null},
+  {f:"Jaimaya",l:"Bolden",y:null},{f:"Pheo",l:"Glover",y:null},{f:"Philecia",l:"Avery",y:null},
+  {f:"Porsche",l:"Forman",y:null},{f:"Portia",l:"Brown",y:null},{f:"Q'Wanyu",l:"Tutt",y:null},
+  {f:"Rae",l:"Smith",y:null},{f:"Ramonda",l:"McNair Howard",y:1997},{f:"Rashida",l:"François",y:null},
+  {f:"Raynelle",l:"J.",y:null},{f:"Regilyn",l:"",y:null},{f:"Rekesha",l:"Harrell",y:null},
+  {f:"Renard",l:"Hill",y:null},{f:"Rhonda",l:"Denson",y:null},{f:"Robert",l:"DeFrantz",y:null},
+  {f:"Rosa",l:"Jordan",y:null},{f:"Rustin",l:"Henry",y:null},{f:"RuthAnn",l:"",y:null},
+  {f:"Ryan",l:"Lee",y:null},{f:"Samantha",l:"Gibbs",y:null},{f:"Samarlos",l:"Scott",y:null},
+  {f:"Samella",l:"Sutton",y:null},{f:"Sonya",l:"Sanders",y:null},{f:"Sandra",l:"Hudson",y:null},
+  {f:"Sandy",l:"Hunter",y:null},{f:"Shannon",l:"Douglas",y:null},{f:"Sharell",l:"Cheatham",y:null},
+  {f:"ShaRhonda",l:"Watkins-Curry",y:null},{f:"Shavitress",l:"Briggs",y:null},
+  {f:"Shelton",l:"Watkins",y:null},{f:"Shenita",l:"Outland",y:null},{f:"Sherita",l:"Castille",y:null},
+  {f:"Shonté",l:"McCain",y:null},{f:"Sonya",l:"Carter",y:null},{f:"Steven",l:"Player",y:null},
+  {f:"Sylvia",l:"",y:null},{f:"Takeesa",l:"James",y:null},{f:"Tala",l:"Johnson-Burl",y:null},
+  {f:"Tamara",l:"E.",y:null},{f:"Tamarah",l:"Walker",y:null},{f:"Tamika",l:"",y:null},
+  {f:"Tamiko",l:"Hickman",y:null},{f:"Tammy",l:"Hobbs",y:null},{f:"Tammy",l:"McCray",y:null},
+  {f:"TaNesha",l:"Turner",y:null},{f:"Tarrow",l:"Seals",y:null},{f:"Tatyana",l:"Franklin",y:null},
+  {f:"Taylor",l:"C.",y:null},{f:"Taylor",l:"Parker",y:null},{f:"Tenesha",l:"Irvin",y:null},
+  {f:"Terreca",l:"Taylor Edwards",y:null},{f:"Terri",l:"",y:null},{f:"Tia",l:"Bailey",y:null},
+  {f:"Tia",l:"Thomas",y:null},{f:"Tiffany",l:"Brumfield",y:null},{f:"Tiffany",l:"Pierson",y:null},
+  {f:"Tim",l:"",y:null},{f:"Tinera",l:"Francois",y:null},{f:"Toi",l:"O.",y:null},
+  {f:"Tori",l:"Foster-Alexander",y:null},{f:"Tori",l:"Wiley",y:null},{f:"Tosin",l:"",y:null},
+  {f:"Tracie",l:"Jiles",y:null},{f:"Tremaine",l:"",y:null},{f:"Treslie",l:"W.",y:null},
+  {f:"Trevlyn",l:"Haddox",y:null},{f:"Trina",l:"Lorraine",y:null},{f:"Trisha",l:"Obinyan",y:null},
+  {f:"Tunisha",l:"Che",y:null},{f:"Tywanna",l:"Vital Gambrell",y:null},{f:"V.",l:"Burton",y:null},
+  {f:"Vasha",l:"Pittman",y:null},{f:"Veleka",l:"Jones Grady",y:2006},{f:"Victoria",l:"Walker",y:null},
+  {f:"Warren",l:"Lee",y:null},{f:"Willie",l:"Lewis",y:null},{f:"Winston",l:"Bryant",y:null},
+  {f:"Yashena",l:"Gillard",y:null},{f:"Yolan",l:"B.",y:null},{f:"Youlicea",l:"Williams",y:null},
+  {f:"Yvette",l:"King Kennedy",y:null},{f:"Yvette",l:"Pierre",y:null},{f:"Zina",l:"Jordan",y:null}
+];
+
+const CITIES = ["New Orleans, LA","Houston, TX","Atlanta, GA","Baton Rouge, LA","Dallas, TX","Memphis, TN","Charlotte, NC","Chicago, IL","Washington, DC","Baltimore, MD","Birmingham, AL","Jackson, MS","San Francisco, CA","New York, NY","Philadelphia, PA","Detroit, MI","Miami, FL","Los Angeles, CA","Boston, MA","Nashville, TN"];
+
+// Survey data overrides — real info from PAG member survey (46 respondents)
+const SURVEY_OVERRIDES = {
+  "Kris|Spears":{position:"Pharmacy Manager",company:"Publix",city:"Atlanta, GA",field:"Community Pharmacy",gradYear:2000,email:"kgspirit17@gmail.com"},
+  "Kristina|Carter":{position:"Clinical Strategy Manager",company:"CareSource",city:"Atlanta, GA",field:"Managed Care",gradYear:2000,email:"Drkris1908@gmail.com"},
+  "Edward|Stemley":{position:"AVP and Associate Provost",company:"UTMB Health",city:"League City, TX",field:"Hospital / Health-System",gradYear:2000,email:"ed.stemley@gmail.com"},
+  "Britney|Woods":{position:"Senior Manager, Community Pharmacy",company:"McKesson Corporation",city:"Mansfield, TX",field:"Pharmaceutical Industry",gradYear:2008,email:"drbslindsey@gmail.com"},
+  "Tatyana|Franklin":{position:"Pharmacy Manager",company:"Walgreens",city:"New Orleans, LA",field:"Community Pharmacy",gradYear:2023,email:"tatyanafranklin92@gmail.com"},
+  "Ravin|Milton":{position:"Pharmacist in Charge",company:"TCURO Pharmacy",city:"Keene, TX",field:"Community Pharmacy",gradYear:2003,email:"ravinmilton@gmail.com"},
+  "Rosiland|Burton":{position:"Contract Pharmacist",company:"Various",city:"Texas",field:"Community Pharmacy",gradYear:2000,email:"rbatt03@apl.com"},
+  "Mary|Gauthier-Lewis":{position:"Retired Professor / Clinical Pharmacist",city:"Prairieville, LA",field:"Academia / Research",gradYear:2000,email:"Marylynngl@gmail.com"},
+  "Willie|Lewis":{position:"Staff Pharmacist",company:"Walmart",city:"Baton Rouge, LA",field:"Community Pharmacy",gradYear:2000,email:"willie_lewis@cox.net"},
+  "Katrina|Nguyen":{position:"Clinical Assistant Professor",company:"Xavier University of Louisiana",city:"New Orleans, LA",field:"Academia / Research",gradYear:2013,email:"knguye14@xula.edu"},
+  "Jovande|Young":{position:"Staff Pharmacist",city:"New Orleans, LA",field:"Community Pharmacy",gradYear:2023,email:"jovandeyoung@gmail.com"},
+  "Cedric|Cloud":{position:"Pharmacy Director",company:"United Healthcare",city:"Spring, TX",field:"Managed Care",gradYear:2003,email:"Cedriccloud74@gmail.com"},
+  "Sonya|Sanders":{position:"Registered Pharmacist",company:"Publix",city:"Mobile, AL",field:"Community Pharmacy",gradYear:2000,email:"smspharmd@gmail.com"},
+  "Kenya|Muhammad":{position:"Clinical Pharmacist MTM",company:"Walmart",city:"Lantana, TX",field:"Community Pharmacy",gradYear:2003,email:"kenyamuhammad@hotmail.com"},
+  "Denise|Coleman":{position:"Pharmacist (Transitioning)",city:"Houston, TX",field:"Community Pharmacy",gradYear:2000,email:"denise.a.coleman98@gmail.com"},
+  "Steven|Player":{position:"VP, Belonging and Inclusion",company:"BJC Health",city:"St. Louis, MO",field:"Hospital / Health-System",gradYear:2000,email:"drplayer1998@gmail.com"},
+  "Calvin|Magee":{position:"Owner / Pharmacist",company:"General Meyer Pharmacy",city:"New Orleans, LA",field:"Community Pharmacy",gradYear:2000,email:"calvinmageejr@gmail.com"},
+  "Brittany|Bush":{position:"Clinical Staff Pharmacist",company:"XULA College of Pharmacy",city:"New Orleans, LA",field:"Ambulatory Care",gradYear:2023,email:"Brittanybush29@yahoo.com"},
+  "Kris|Rogers Washington":{position:"Sr Dir, Medical Training & Field Excellence",company:"Sarepta",city:"Baton Rouge, LA",field:"Pharmaceutical Industry",gradYear:2000,email:"karpharmd@gmail.com"},
+  "Toi|O.":{position:"Senior Clinical Consultant",company:"OptumRx",city:"Plano, TX",field:"Managed Care",gradYear:2003,email:"Tolden7948@aol.com"},
+  "Ayana|Henderson":{position:"Senior Director",company:"Eli Lilly and Company",city:"Indianapolis, IN",field:"Pharmaceutical Industry",gradYear:2003,email:"Ayana.rowley@gmail.com"},
+  "Kraig|Loyd":{position:"Clinical Pharmacist",city:"Dallas, TX",field:"Managed Care",gradYear:2003,email:"kraigloyd@gmail.com"},
+  "TaNesha|Turner":{position:"Assistant Pharmacy Manager",city:"Frisco, TX",field:"Community Pharmacy",gradYear:2008,email:"tlst0279@gmail.com"},
+  "Karen|Whitfield":{position:"Clinical Pharmacist / Patient Advocate",company:"Department of Veteran Affairs",city:"Highland, IN",field:"Public Health Pharmacy",gradYear:2000,email:"karenvision2020@gmail.com"},
+  "Charles|M.":{position:"Senior Medical Science Liaison",company:"Eisai",city:"Marrero, LA",field:"Pharmaceutical Industry",gradYear:2013,email:"cmasoniiirph@yahoo.com"},
+  "Erika|Wilson":{position:"Pharmacy Director",company:"UTHealth Houston",city:"Houston, TX",field:"Hospital / Health-System",gradYear:2008,email:"Erikawilsonpharmd@gmail.com"},
+  "Kyla|Leon":{position:"Neuroscience ICU Pharmacist",company:"University of Mississippi Medical Center",city:"Brandon, MS",field:"Hospital / Health-System",gradYear:2013,email:"kyla.a.leon@gmail.com"},
+  "Eden|Keller":{position:"Clinical Assistant Professor / Pharmacist",company:"University of Illinois Chicago",city:"Chicago, IL",field:"Hospital / Health-System",gradYear:2018,email:"ekeller@uic.edu"},
+  "Dawn|L.R.":{position:"Staff Pharmacist",company:"Cook County Health",city:"Chicago, IL",field:"Community Pharmacy",gradYear:2000,email:"dalewru@gmail.com"},
+  "V.|Burton":{position:"Clinical Pharmacist",company:"Encompass Health",city:"Irving, TX",field:"Hospital / Health-System",gradYear:2000,email:"vb.scieng2@gmail.com"},
+  "Ramonda|McNair Howard":{position:"Pharmacy Manager",company:"Publix Supermarket",city:"Conyers, GA",field:"Community Pharmacy",gradYear:2000,email:"rrmcnair@aol.com"},
+  "Shenita|Outland":{position:"Clinical Consultant",company:"Clearlink Partners",city:"Houston, TX",field:"Managed Care",gradYear:2008,email:"droutland06@gmail.com"},
+  "Robin|Vidal":{position:"Director of Experiential Education",company:"William Carey University",city:"New Orleans, LA",field:"Academia / Research",gradYear:2008,email:"robinrvidal@yahoo.com"},
+  "Demorea|Harper":{position:"Pharmacy Manager",company:"CVS",city:"Kennesaw, GA",field:"Community Pharmacy",gradYear:2000,email:"demoreaharper@gmail.com"},
 };
 
-// ============= COMPONENTS =============
-
-function Header() {
-  return (
-    <header style={{ 
-      background: 'linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%)',
-      padding: '3rem 2rem',
-      color: 'var(--white)',
-      boxShadow: 'var(--shadow-lg)',
-      textAlign: 'center'
-    }}>
-      <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', fontWeight: 800, fontFamily: "'Playfair Display', serif" }}>
-        XUPharmConnect
-      </h1>
-      <p style={{ fontSize: '1.1rem', opacity: 0.95, fontWeight: 500 }}>
-        Xavier College of Pharmacy Alumni Network
-      </p>
-      <p style={{ fontSize: '0.95rem', opacity: 0.8, marginTop: '0.5rem' }}>
-        Building connections. Advancing careers. Serving communities.
-      </p>
-    </header>
-  );
+function seededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
 }
 
-function SurveyHighlights() {
-  return (
-    <section style={{ padding: '3rem 2rem', background: 'var(--bg)' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <h2 style={{ 
-          fontSize: '2rem',
-          marginBottom: '2rem',
-          textAlign: 'center',
-          color: 'var(--navy)',
-          fontWeight: 700,
-          fontFamily: "'Playfair Display', serif"
-        }}>
-          2024 Alumni Survey Insights
-        </h2>
-        
-        <div style={{ 
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: '2rem',
-          marginBottom: '3rem'
-        }}>
-          <StatCard
-            label="Survey Respondents"
-            value={SURVEY_RESULTS.totalRespondents}
-            unit="alumni"
-            color="var(--navy)"
-          />
-          <StatCard
-            label="Overall Satisfaction"
-            value={SURVEY_RESULTS.satisfactionScore}
-            unit="/5.0"
-            color="var(--gold)"
-          />
-          <StatCard
-            label="Would Recommend"
-            value={SURVEY_RESULTS.recommendationRate}
-            unit="%"
-            color="var(--teal)"
-          />
-          <StatCard
-            label="Active Engagement"
-            value={SURVEY_RESULTS.engagementRate}
-            unit="%"
-            color="var(--coral)"
-          />
-        </div>
-
-        <div style={{ 
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-          gap: '2rem'
-        }}>
-          <InterestChart data={SURVEY_RESULTS.keyTopics} title="Key Interest Areas" />
-          <RegionChart data={SURVEY_RESULTS.regions} title="Geographic Distribution" />
-          <SectorChart data={SURVEY_RESULTS.sectors} title="Professional Sectors" />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function StatCard({ label, value, unit, color }) {
-  return (
-    <div style={{
-      background: 'var(--white)',
-      padding: '2rem',
-      borderRadius: 'var(--radius-lg)',
-      boxShadow: 'var(--shadow)',
-      textAlign: 'center',
-      animation: 'fadeIn 0.5s ease-out',
-      borderTop: `4px solid ${color}`
-    }}>
-      <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-        {label}
-      </p>
-      <p style={{ fontSize: '2.5rem', fontWeight: 800, color: color, marginBottom: '0.25rem' }}>
-        {value}{unit}
-      </p>
-    </div>
-  );
-}
-
-function InterestChart({ data, title }) {
-  const maxValue = Math.max(...data.map(d => d.interest));
-  
-  return (
-    <div style={{
-      background: 'var(--white)',
-      padding: '2rem',
-      borderRadius: 'var(--radius-lg)',
-      boxShadow: 'var(--shadow)',
-      animation: 'fadeIn 0.6s ease-out'
-    }}>
-      <h3 style={{ fontSize: '1.3rem', marginBottom: '1.5rem', color: 'var(--navy)', fontWeight: 700 }}>
-        {title}
-      </h3>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-        {data.map((item, idx) => (
-          <div key={idx}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <span style={{ color: 'var(--text)', fontWeight: 500 }}>{item.topic}</span>
-              <span style={{ color: 'var(--gold)', fontWeight: 700 }}>{item.interest}%</span>
-            </div>
-            <div style={{
-              height: '8px',
-              background: 'var(--border)',
-              borderRadius: '4px',
-              overflow: 'hidden'
-            }}>
-              <div style={{
-                height: '100%',
-                background: 'linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%)',
-                width: `${(item.interest / maxValue) * 100}%`,
-                borderRadius: '4px',
-                animation: 'slideIn 0.8s ease-out'
-              }} />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function RegionChart({ data, title }) {
-  const maxValue = Math.max(...data.map(d => d.count));
-  const colors = ['var(--navy)', 'var(--navy-light)', 'var(--gold)', 'var(--teal)', 'var(--coral)', 'var(--coral-light)'];
-  
-  return (
-    <div style={{
-      background: 'var(--white)',
-      padding: '2rem',
-      borderRadius: 'var(--radius-lg)',
-      boxShadow: 'var(--shadow)',
-      animation: 'fadeIn 0.6s ease-out'
-    }}>
-      <h3 style={{ fontSize: '1.3rem', marginBottom: '1.5rem', color: 'var(--navy)', fontWeight: 700 }}>
-        {title}
-      </h3>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-        {data.map((item, idx) => (
-          <div key={idx}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <span style={{ color: 'var(--text)', fontWeight: 500 }}>{item.region}</span>
-              <span style={{ color: colors[idx % colors.length], fontWeight: 700 }}>{item.count}</span>
-            </div>
-            <div style={{
-              height: '8px',
-              background: 'var(--border)',
-              borderRadius: '4px',
-              overflow: 'hidden'
-            }}>
-              <div style={{
-                height: '100%',
-                background: colors[idx % colors.length],
-                width: `${(item.count / maxValue) * 100}%`,
-                borderRadius: '4px',
-                animation: 'slideIn 0.8s ease-out'
-              }} />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function SectorChart({ data, title }) {
-  const maxValue = Math.max(...data.map(d => d.count));
-  const colors = ['var(--teal)', 'var(--teal-light)', 'var(--coral)', 'var(--coral-light)', 'var(--gold)', 'var(--gold-light)'];
-  
-  return (
-    <div style={{
-      background: 'var(--white)',
-      padding: '2rem',
-      borderRadius: 'var(--radius-lg)',
-      boxShadow: 'var(--shadow)',
-      animation: 'fadeIn 0.6s ease-out'
-    }}>
-      <h3 style={{ fontSize: '1.3rem', marginBottom: '1.5rem', color: 'var(--navy)', fontWeight: 700 }}>
-        {title}
-      </h3>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-        {data.map((item, idx) => (
-          <div key={idx}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <span style={{ color: 'var(--text)', fontWeight: 500 }}>{item.sector}</span>
-              <span style={{ color: colors[idx % colors.length], fontWeight: 700 }}>{item.count}</span>
-            </div>
-            <div style={{
-              height: '8px',
-              background: 'var(--border)',
-              borderRadius: '4px',
-              overflow: 'hidden'
-            }}>
-              <div style={{
-                height: '100%',
-                background: colors[idx % colors.length],
-                width: `${(item.count / maxValue) * 100}%`,
-                borderRadius: '4px',
-                animation: 'slideIn 0.8s ease-out'
-              }} />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function MembersSection() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState('All');
-  const [sortBy, setSortBy] = useState('name');
-
-  const filteredMembers = useMemo(() => {
-    let result = MOCK_MEMBERS;
-
-    if (searchTerm) {
-      result = result.filter(m =>
-        m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        m.institution.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        m.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        m.expertise.some(e => e.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
+function generateAlumniFromMembers() {
+  const rng = seededRandom(42);
+  const pick = arr => arr[Math.floor(rng() * arr.length)];
+  return REAL_MEMBERS.map((m, i) => {
+    // Generate random defaults (keeps RNG sequence stable)
+    const randGradYear = m.y || pick(GRAD_YEARS);
+    const randField = pick(PHARMACY_FIELDS);
+    const randCompany = pick(COMPANIES);
+    const randPosition = pick(POSITIONS);
+    const randCity = pick(CITIES);
+    const isCurrent = rng() > 0.2;
+    const fn = m.f.toLowerCase().replace(/[^a-z']/g,'');
+    const ln = (m.l || 'xu').toLowerCase().replace(/[^a-z]/g,'');
+    const randEmail = fn && ln ? `${fn}.${ln}${Math.floor(rng()*99)}@email.com` : `${fn||ln}${Math.floor(rng()*99)}@email.com`;
+    const hasLinkedIn = rng() > 0.3;
+    const randYearsExp = Math.max(0, 2026 - randGradYear - Math.floor(rng()*3));
+    const numRoles = rng() < 0.35 ? (rng() < 0.6 ? 1 : 2) : 0;
+    const additionalRoles = [];
+    for (let r = 0; r < numRoles; r++) {
+      const role = ADDITIONAL_ROLES[Math.floor(rng() * ADDITIONAL_ROLES.length)];
+      if (!additionalRoles.includes(role)) additionalRoles.push(role);
     }
+    const randColor = `hsl(${Math.floor(rng()*360)}, 45%, 42%)`;
 
-    if (sortBy === 'name') {
-      result.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortBy === 'class') {
-      result.sort((a, b) => parseInt(b.class) - parseInt(a.class));
-    }
+    // Check for survey override
+    const key = `${m.f}|${m.l}`;
+    const ov = SURVEY_OVERRIDES[key];
+    const firstName = m.f;
+    const lastName = m.l;
+    const gradYear = ov ? (ov.gradYear || randGradYear) : randGradYear;
+    const field = ov ? (ov.field || randField) : randField;
+    const company = ov ? (ov.company || randCompany) : randCompany;
+    const position = ov ? (ov.position || randPosition) : randPosition;
+    const city = ov ? (ov.city || randCity) : randCity;
+    const email = ov ? (ov.email || randEmail) : randEmail;
+    const yearsExp = ov ? Math.max(0, 2026 - gradYear) : randYearsExp;
+    const initials = (firstName[0]||'') + (lastName[0]||'');
+    return {
+      id: i + 1, firstName, lastName, gradYear, field, company,
+      position, city, isCurrent: ov ? true : isCurrent, email, hasLinkedIn, yearsExp,
+      avatar: initials || firstName.slice(0,2),
+      color: randColor,
+      additionalRoles,
+      hasSurveyData: !!ov
+    };
+  });
+}
 
-    return result;
-  }, [searchTerm, sortBy]);
+let ALUMNI_DATA = generateAlumniFromMembers();
+
+// Add Dr. D.J. as an alumni entry at the beginning
+ALUMNI_DATA.unshift({
+  id: 0,
+  firstName: "Dr.",
+  lastName: "D.J.",
+  gradYear: 2018,
+  field: "Community Pharmacy",
+  company: "Wellwise Pharmacy",
+  position: "Pharmacist-In-Charge & Owner / PAG President-Elect",
+  city: "Houston, TX",
+  isCurrent: true,
+  email: "drdj@wellwiserx.com",
+  hasLinkedIn: true,
+  linkedInUrl: "https://www.linkedin.com/in/drdjrealestate/",
+  yearsExp: 8,
+  avatar: "DJ",
+  color: "#0a1628",
+  additionalRoles: ["Realtor","Entrepreneur"],
+  hasSurveyData: true
+});
+
+// ─── ICONS (inline SVG) ─────────────────────────────────────────────
+const Icon = ({d, size=20, color="currentColor", ...props}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+    stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d={d}/>
+  </svg>
+);
+
+const SearchIcon = (p) => <Icon d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" {...p}/>;
+const UserIcon = (p) => <Icon {...p}><circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" fill="none"/><path d="M4 21v-1a6 6 0 0112 0v1" stroke="currentColor" strokeWidth="2" fill="none"/></Icon>;
+const BriefcaseIcon = (p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>;
+const MailIcon = (p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>;
+const MapPinIcon = (p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 21c-4-4-8-7.33-8-11a8 8 0 1116 0c0 3.67-4 7-8 11z"/><circle cx="12" cy="10" r="3"/></svg>;
+const LinkedInIcon = (p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0 24 24" fill={p.fill||"currentColor"}><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>;
+const ChevronDownIcon = (p) => <svg width={p.size||16} height={p.size||16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>;
+const FilterIcon = (p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>;
+const UploadIcon = (p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>;
+const GraduationIcon = (p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10l-10-6L2 10l10 6 10-6z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/><line x1="22" y1="10" x2="22" y2="16"/></svg>;
+const BuildingIcon = (p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 22V12h6v10"/><path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01"/></svg>;
+const XIcon = (p) => <svg width={p.size||16} height={p.size||16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>;
+const BarChartIcon = (p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>;
+const GridIcon = (p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>;
+const ListIcon = (p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="18" r="1" fill="currentColor"/></svg>;
+const StarIcon = (p) => <svg width={p.size||16} height={p.size||16} viewBox="0 0 24 24" fill={p.filled?"var(--gold)":"none"} stroke={p.filled?"var(--gold)":"currentColor"} strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>;
+
+// ─── COMPONENTS ─────────────────────────────────────────────────────
+function StatCard({icon, label, value, accent}) {
+  return (
+    <div style={{
+      background: 'var(--white)', borderRadius: 'var(--radius-lg)',
+      padding: '20px 24px', boxShadow: 'var(--shadow)',
+      borderLeft: `4px solid ${accent||'var(--gold)'}`,
+      display:'flex', alignItems:'center', gap: 16
+    }}>
+      <div style={{
+        width:44, height:44, borderRadius:10,
+        background: accent ? `${accent}12` : 'rgba(255,197,48,0.1)',
+        display:'flex',alignItems:'center',justifyContent:'center',
+        color: accent||'var(--gold-dark)', flexShrink:0
+      }}>{icon}</div>
+      <div>
+        <div style={{fontSize:26,fontWeight:700,color:'var(--navy)',lineHeight:1.1}}>{value}</div>
+        <div style={{fontSize:13,color:'var(--text-muted)',marginTop:2}}>{label}</div>
+      </div>
+    </div>
+  );
+}
+
+function SelectDropdown({label, value, onChange, options, placeholder}) {
+  return (
+    <div style={{position:'relative',flex:1,minWidth:180}}>
+      <label style={{display:'block',fontSize:12,fontWeight:600,color:'var(--text-secondary)',marginBottom:4,textTransform:'uppercase',letterSpacing:'.5px'}}>{label}</label>
+      <div style={{position:'relative'}}>
+        <select value={value} onChange={e=>onChange(e.target.value)} style={{
+          width:'100%',padding:'10px 36px 10px 14px',border:'1.5px solid var(--border)',
+          borderRadius:'var(--radius)',background:'var(--white)',fontSize:14,color:'var(--text)',
+          appearance:'none',outline:'none',transition:'border-color .2s'
+        }}
+        onFocus={e=>e.target.style.borderColor='var(--gold)'}
+        onBlur={e=>e.target.style.borderColor='var(--border)'}>
+          <option value="">{placeholder||'All'}</option>
+          {options.map(o=><option key={o} value={o}>{o}</option>)}
+        </select>
+        <div style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',pointerEvents:'none',color:'var(--text-muted)'}}>
+          <ChevronDownIcon/>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AlumniCard({person, onContact, viewMode}) {
+  const [hovered, setHovered] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  if (viewMode === 'list') {
+    return (
+      <div className="animate-fade" onMouseEnter={()=>setHovered(true)} onMouseLeave={()=>setHovered(false)}
+        style={{
+          background: hovered ? '#fafbfd' : 'var(--white)',
+          borderRadius: 'var(--radius)', padding: '14px 20px',
+          display:'flex', alignItems:'center', gap: 16,
+          borderBottom: '1px solid var(--border-light)',
+          transition: 'background .15s'
+        }}>
+        <div style={{
+          width:42,height:42,borderRadius:'50%',background:person.color,
+          display:'flex',alignItems:'center',justifyContent:'center',
+          color:'#fff',fontWeight:700,fontSize:14,flexShrink:0
+        }}>{person.avatar}</div>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontWeight:600,fontSize:15}}>{person.firstName} {person.lastName}</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{person.position} at {person.company}</div>
+        </div>
+        <div style={{fontSize:13,color:'var(--text-muted)',minWidth:100,textAlign:'center'}}>{person.field}</div>
+        <div style={{fontSize:13,color:'var(--text-muted)',minWidth:60,textAlign:'center'}}>'{String(person.gradYear).slice(-2)}</div>
+        <div style={{fontSize:13,color:'var(--text-muted)',minWidth:120}}>{person.city}</div>
+        <span style={{
+          display:'inline-block',padding:'3px 10px',borderRadius:20,fontSize:11,fontWeight:600,
+          background: person.isCurrent ? 'rgba(0,168,135,0.1)' : 'rgba(255,197,48,0.15)',
+          color: person.isCurrent ? 'var(--teal)' : 'var(--gold-dark)'
+        }}>{person.isCurrent ? 'Current' : 'Past'}</span>
+        <div style={{display:'flex',gap:6}}>
+          {person.hasLinkedIn && <button onClick={() => person.linkedInUrl && window.open(person.linkedInUrl, '_blank')} title="LinkedIn" style={{
+            width:32,height:32,borderRadius:6,border:'1px solid var(--border)',background:'transparent',
+            display:'flex',alignItems:'center',justifyContent:'center',color:'#0077b5'
+          }}><LinkedInIcon size={15}/></button>}
+          <button onClick={()=>onContact(person)} title="Contact" style={{
+            width:32,height:32,borderRadius:6,border:'1px solid var(--border)',background:'transparent',
+            display:'flex',alignItems:'center',justifyContent:'center',color:'var(--navy)'
+          }}><MailIcon size={15}/></button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <section style={{ padding: '3rem 2rem', background: 'var(--white)' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <h2 style={{ 
-          fontSize: '2rem',
-          marginBottom: '2rem',
-          color: 'var(--navy)',
-          fontWeight: 700,
-          fontFamily: "'Playfair Display', serif"
-        }}>
-          Alumni Directory ({filteredMembers.length})
-        </h2>
-
+    <div className="animate-fade" onMouseEnter={()=>setHovered(true)} onMouseLeave={()=>setHovered(false)}
+      style={{
+        background:'var(--white)',borderRadius:'var(--radius-lg)',
+        boxShadow: hovered ? 'var(--shadow-lg)' : 'var(--shadow)',
+        transform: hovered ? 'translateY(-2px)' : 'none',
+        transition:'all .2s ease',overflow:'hidden',position:'relative',
+        border: 'none'
+      }}>
+      {/* Featured badge */}
+      {person.featured && (
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '1.5rem',
-          marginBottom: '2rem'
-        }}>
+          position:'absolute',top:14,left:14,
+          background:'var(--gold)',color:'var(--navy)',
+          padding:'4px 12px',borderRadius:12,fontSize:11,fontWeight:700,
+          zIndex:2,textTransform:'uppercase',letterSpacing:'0.5px'
+        }}>Featured</div>
+      )}
+
+      {/* Top accent bar */}
+      <div style={{height:4,background: `linear-gradient(90deg, var(--navy), var(--gold))`}}/>
+
+      {/* Save star */}
+      <button onClick={()=>setSaved(!saved)} style={{
+        position:'absolute',top:14,right:14,background:'none',border:'none',padding:4,zIndex:2
+      }}><StarIcon filled={saved}/></button>
+
+      <div style={{padding:'20px 22px'}}>
+        {/* Avatar + Name */}
+        <div style={{display:'flex',alignItems:'center',gap:14,marginBottom:16}}>
+          <div style={{
+            width:52,height:52,borderRadius:'50%',background:person.color,
+            display:'flex',alignItems:'center',justifyContent:'center',
+            color:'#fff',fontWeight:700,fontSize:18,flexShrink:0,
+            boxShadow:'0 2px 8px rgba(0,0,0,.15)'
+          }}>{person.avatar}</div>
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text)', fontWeight: 500 }}>
-              Search Members
-            </label>
-            <input
-              type="text"
-              placeholder="Search by name, institution, role, or expertise..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: `1px solid var(--border)`,
-                borderRadius: 'var(--radius)',
-                fontSize: '1rem',
-                fontFamily: 'inherit'
-              }}
-            />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text)', fontWeight: 500 }}>
-              Sort By
-            </label>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: `1px solid var(--border)`,
-                borderRadius: 'var(--radius)',
-                fontSize: '1rem',
-                fontFamily: 'inherit',
-                background: 'var(--white)',
-                cursor: 'pointer'
-              }}
-            >
-              <option value="name">Name (A-Z)</option>
-              <option value="class">Graduation Year (Newest First)</option>
-            </select>
+            <div style={{fontWeight:700,fontSize:16,lineHeight:1.2}}>{person.firstName} {person.lastName}</div>
+            <div style={{fontSize:13,color:'var(--text-secondary)',marginTop:2}}>Class of {person.gradYear}</div>
           </div>
         </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: '2rem'
-        }}>
-          {filteredMembers.map(member => (
-            <MemberCard key={member.id} member={member} />
+        {/* Details */}
+        <div style={{display:'flex',flexDirection:'column',gap:8,marginBottom:16}}>
+          <div style={{display:'flex',alignItems:'center',gap:8,fontSize:13,color:'var(--text-secondary)'}}>
+            <BriefcaseIcon size={15}/> <span style={{fontWeight:500,color:'var(--text)'}}>{person.position}</span>
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:8,fontSize:13,color:'var(--text-secondary)'}}>
+            <BuildingIcon size={15}/> {person.company}
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:8,fontSize:13,color:'var(--text-secondary)'}}>
+            <MapPinIcon size={15}/> {person.city}
+          </div>
+        </div>
+
+        {/* Tags */}
+        <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:16}}>
+          <span style={{
+            padding:'4px 10px',borderRadius:20,fontSize:11,fontWeight:600,
+            background:'rgba(10,22,40,0.06)',color:'var(--navy-mid)'
+          }}>{person.field}</span>
+          {person.additionalRoles && person.additionalRoles.map((role, idx) => (
+            <span key={idx} style={{
+              padding:'4px 10px',borderRadius:20,fontSize:11,fontWeight:600,
+              background:'var(--coral-bg)',color:'var(--coral)'
+            }}>{role}</span>
+          ))}
+          <span style={{
+            padding:'4px 10px',borderRadius:20,fontSize:11,fontWeight:600,
+            background: person.isCurrent ? 'rgba(0,168,135,0.1)' : 'rgba(255,197,48,0.15)',
+            color: person.isCurrent ? 'var(--teal)' : 'var(--gold-dark)'
+          }}>{person.isCurrent ? 'Currently Here' : 'Previously Here'}</span>
+          <span style={{
+            padding:'4px 10px',borderRadius:20,fontSize:11,fontWeight:600,
+            background:'rgba(255,197,48,0.1)',color:'var(--gold-dark)'
+          }}>{person.yearsExp}yr exp</span>
+        </div>
+
+        {/* Actions */}
+        <div style={{display:'flex',gap:8}}>
+          <button onClick={()=>onContact(person)} style={{
+            flex:1,padding:'9px 0',borderRadius:'var(--radius)',border:'none',
+            background:'var(--navy)',color:'#fff',fontSize:13,fontWeight:600,
+            display:'flex',alignItems:'center',justifyContent:'center',gap:6,
+            transition:'background .15s'
+          }}
+          onMouseEnter={e=>e.target.style.background='var(--navy-mid)'}
+          onMouseLeave={e=>e.target.style.background='var(--navy)'}
+          ><MailIcon size={14}/> Connect</button>
+          {person.hasLinkedIn && (
+            <button onClick={() => person.linkedInUrl && window.open(person.linkedInUrl, '_blank')} style={{
+              padding:'9px 14px',borderRadius:'var(--radius)',border:'1.5px solid #0077b5',
+              background:'transparent',color:'#0077b5',fontSize:13,fontWeight:600,
+              display:'flex',alignItems:'center',justifyContent:'center',gap:5,
+              transition:'all .15s'
+            }}
+            onMouseEnter={e=>{e.target.style.background='#0077b5';e.target.style.color='#fff'}}
+            onMouseLeave={e=>{e.target.style.background='transparent';e.target.style.color='#0077b5'}}
+            ><LinkedInIcon size={14} fill="currentColor"/> LinkedIn</button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ContactModal({person, onClose}) {
+  const [message, setMessage] = useState(`Hi ${person.firstName},\n\nI'm a fellow Xavier College of Pharmacy alum and I'd love to connect about your work in ${person.field}. Would you be open to a brief chat?\n\nBest regards`);
+  const [sent, setSent] = useState(false);
+
+  if (sent) {
+    return (
+      <div style={{position:'fixed',inset:0,background:'rgba(10,22,40,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000,padding:20}} onClick={onClose}>
+        <div onClick={e=>e.stopPropagation()} className="animate-fade" style={{background:'var(--white)',borderRadius:'var(--radius-lg)',padding:'40px',textAlign:'center',maxWidth:400,width:'100%',boxShadow:'var(--shadow-lg)'}}>
+          <div style={{width:64,height:64,borderRadius:'50%',background:'rgba(0,168,135,0.1)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px'}}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <h3 style={{fontSize:20,fontWeight:700,marginBottom:8}}>Message Sent!</h3>
+          <p style={{color:'var(--text-secondary)',fontSize:14,marginBottom:20}}>Your connection request has been sent to {person.firstName} {person.lastName}.</p>
+          <button onClick={onClose} style={{padding:'10px 28px',borderRadius:'var(--radius)',border:'none',background:'var(--navy)',color:'#fff',fontSize:14,fontWeight:600}}>Done</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{position:'fixed',inset:0,background:'rgba(10,22,40,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000,padding:20}} onClick={onClose}>
+      <div onClick={e=>e.stopPropagation()} className="animate-fade" style={{background:'var(--white)',borderRadius:'var(--radius-lg)',maxWidth:520,width:'100%',overflow:'hidden',boxShadow:'var(--shadow-lg)'}}>
+        <div style={{background:'var(--navy)',padding:'20px 24px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <h3 style={{color:'#fff',fontSize:18,fontWeight:700}}>Connect with {person.firstName}</h3>
+          <button onClick={onClose} style={{background:'rgba(255,255,255,0.15)',border:'none',borderRadius:6,width:32,height:32,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff'}}><XIcon/></button>
+        </div>
+        <div style={{padding:24}}>
+          <div style={{display:'flex',alignItems:'center',gap:14,marginBottom:20,padding:16,background:'var(--bg)',borderRadius:'var(--radius)'}}>
+            <div style={{width:48,height:48,borderRadius:'50%',background:person.color,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:700,fontSize:16}}>{person.avatar}</div>
+            <div>
+              <div style={{fontWeight:600}}>{person.firstName} {person.lastName}</div>
+              <div style={{fontSize:13,color:'var(--text-secondary)'}}>{person.position} at {person.company}</div>
+              <div style={{fontSize:12,color:'var(--text-muted)'}}>Class of {person.gradYear} · {person.city}</div>
+            </div>
+          </div>
+          <label style={{display:'block',fontSize:13,fontWeight:600,color:'var(--text-secondary)',marginBottom:6}}>Your Message</label>
+          <textarea value={message} onChange={e=>setMessage(e.target.value)} rows={6} style={{
+            width:'100%',padding:14,border:'1.5px solid var(--border)',borderRadius:'var(--radius)',
+            fontSize:14,resize:'vertical',outline:'none',lineHeight:1.6
+          }}
+          onFocus={e=>e.target.style.borderColor='var(--gold)'}
+          onBlur={e=>e.target.style.borderColor='var(--border)'}/>
+          <div style={{display:'flex',gap:10,marginTop:16,justifyContent:'flex-end'}}>
+            <button onClick={onClose} style={{padding:'10px 20px',borderRadius:'var(--radius)',border:'1.5px solid var(--border)',background:'transparent',fontSize:14,fontWeight:500,color:'var(--text-secondary)'}}>Cancel</button>
+            <button onClick={()=>setSent(true)} style={{padding:'10px 24px',borderRadius:'var(--radius)',border:'none',background:'var(--gold)',color:'var(--navy)',fontSize:14,fontWeight:700,display:'flex',alignItems:'center',gap:6}}>
+              <MailIcon size={15}/> Send Connection Request
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function UploadModal({onClose}) {
+  const [dragOver, setDragOver] = useState(false);
+  const [uploaded, setUploaded] = useState(false);
+
+  if (uploaded) {
+    return (
+      <div style={{position:'fixed',inset:0,background:'rgba(10,22,40,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000,padding:20}} onClick={onClose}>
+        <div onClick={e=>e.stopPropagation()} className="animate-fade" style={{background:'var(--white)',borderRadius:'var(--radius-lg)',padding:40,textAlign:'center',maxWidth:440,width:'100%',boxShadow:'var(--shadow-lg)'}}>
+          <div style={{width:64,height:64,borderRadius:'50%',background:'rgba(0,168,135,0.1)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px'}}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <h3 style={{fontSize:20,fontWeight:700,marginBottom:8}}>Profile Added!</h3>
+          <p style={{color:'var(--text-secondary)',fontSize:14,marginBottom:8}}>Your information has been extracted and added to the XUPharmConnect directory.</p>
+          <p style={{color:'var(--text-muted)',fontSize:13,marginBottom:20}}>Other Xavier alumni can now find and connect with you.</p>
+          <button onClick={onClose} style={{padding:'10px 28px',borderRadius:'var(--radius)',border:'none',background:'var(--navy)',color:'#fff',fontSize:14,fontWeight:600}}>Done</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{position:'fixed',inset:0,background:'rgba(10,22,40,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000,padding:20}} onClick={onClose}>
+      <div onClick={e=>e.stopPropagation()} className="animate-fade" style={{background:'var(--white)',borderRadius:'var(--radius-lg)',maxWidth:520,width:'100%',overflow:'hidden',boxShadow:'var(--shadow-lg)'}}>
+        <div style={{background:'var(--navy)',padding:'20px 24px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <h3 style={{color:'#fff',fontSize:18,fontWeight:700}}>Join the Network</h3>
+          <button onClick={onClose} style={{background:'rgba(255,255,255,0.15)',border:'none',borderRadius:6,width:32,height:32,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff'}}><XIcon/></button>
+        </div>
+        <div style={{padding:24}}>
+          <p style={{fontSize:14,color:'var(--text-secondary)',marginBottom:20}}>Upload your LinkedIn profile or resume and we'll automatically extract your info to add you to the Xavier pharmacy network.</p>
+          <div
+            onDragOver={e=>{e.preventDefault();setDragOver(true)}}
+            onDragLeave={()=>setDragOver(false)}
+            onDrop={e=>{e.preventDefault();setDragOver(false);setUploaded(true)}}
+            onClick={()=>setUploaded(true)}
+            style={{
+              border: `2px dashed ${dragOver ? 'var(--gold)' : 'var(--border)'}`,
+              borderRadius:'var(--radius-lg)',padding:'40px 24px',textAlign:'center',
+              background: dragOver ? 'rgba(255,197,48,0.04)' : 'var(--bg)',
+              cursor:'pointer',transition:'all .2s',marginBottom:20
+            }}>
+            <div style={{width:56,height:56,borderRadius:'50%',background:'rgba(255,197,48,0.1)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 12px',color:'var(--gold-dark)'}}>
+              <UploadIcon size={24}/>
+            </div>
+            <div style={{fontWeight:600,fontSize:15,marginBottom:4}}>Drop your file here or click to upload</div>
+            <div style={{fontSize:13,color:'var(--text-muted)'}}>Accepts: PDF resume, LinkedIn profile export, or .txt</div>
+          </div>
+          <div style={{textAlign:'center',color:'var(--text-muted)',fontSize:13,marginBottom:16}}>— or paste your LinkedIn URL —</div>
+          <div style={{display:'flex',gap:8}}>
+            <input placeholder="https://linkedin.com/in/yourprofile" style={{
+              flex:1,padding:'10px 14px',border:'1.5px solid var(--border)',borderRadius:'var(--radius)',
+              fontSize:14,outline:'none'
+            }}
+            onFocus={e=>e.target.style.borderColor='var(--gold)'}
+            onBlur={e=>e.target.style.borderColor='var(--border)'}/>
+            <button onClick={()=>setUploaded(true)} style={{padding:'10px 20px',borderRadius:'var(--radius)',border:'none',background:'var(--gold)',color:'var(--navy)',fontWeight:700,fontSize:14,whiteSpace:'nowrap'}}>
+              Extract Profile
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InsightsPanel({data}) {
+  const topCompanies = useMemo(() => {
+    const counts = {};
+    data.forEach(p => { counts[p.company] = (counts[p.company]||0) + 1; });
+    return Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  }, [data]);
+
+  const topFields = useMemo(() => {
+    const counts = {};
+    data.forEach(p => { counts[p.field] = (counts[p.field]||0) + 1; });
+    return Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  }, [data]);
+
+  const topCities = useMemo(() => {
+    const counts = {};
+    data.forEach(p => { counts[p.city] = (counts[p.city]||0) + 1; });
+    return Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  }, [data]);
+
+  const maxCompany = topCompanies[0]?.[1] || 1;
+  const maxField = topFields[0]?.[1] || 1;
+
+
+  const topAdditionalRoles = useMemo(() => {
+    const counts = {};
+    data.forEach(p => {
+      if (p.additionalRoles) {
+        p.additionalRoles.forEach(r => {
+          counts[r] = (counts[r] || 0) + 1;
+        });
+      }
+    });
+    return Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 8);
+  }, [data]);
+
+  const maxRoles = topAdditionalRoles[0]?.[1] || 1;
+
+    return (
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:20}}>
+      <div style={{background:'var(--white)',borderRadius:'var(--radius-lg)',padding:24,boxShadow:'var(--shadow)'}}>
+        <h3 style={{fontSize:15,fontWeight:700,marginBottom:16,display:'flex',alignItems:'center',gap:8}}>
+          <BuildingIcon size={18}/> Top Employers
+        </h3>
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          {topCompanies.map(([name, count]) => (
+            <div key={name}>
+              <div style={{display:'flex',justifyContent:'space-between',fontSize:13,marginBottom:4}}>
+                <span style={{fontWeight:500}}>{name}</span>
+                <span style={{color:'var(--text-muted)'}}>{count} alumni</span>
+              </div>
+              <div style={{height:6,background:'var(--bg)',borderRadius:3,overflow:'hidden'}}>
+                <div style={{height:'100%',width:`${(count/maxCompany)*100}%`,background:'linear-gradient(90deg, var(--navy), var(--navy-mid))',borderRadius:3,transition:'width .4s ease'}}/>
+              </div>
+            </div>
           ))}
         </div>
-
-        {filteredMembers.length === 0 && (
-          <div style={{
-            textAlign: 'center',
-            padding: '3rem 2rem',
-            color: 'var(--text-secondary)'
-          }}>
-            <p style={{ fontSize: '1.1rem' }}>No members match your search.</p>
-          </div>
-        )}
       </div>
-    </section>
-  );
-}
-
-function MemberCard({ member }) {
-  const [showDetails, setShowDetails] = useState(false);
-
-  return (
-    <div style={{
-      background: 'var(--white)',
-      borderRadius: 'var(--radius-lg)',
-      overflow: 'hidden',
-      boxShadow: 'var(--shadow)',
-      border: `1px solid var(--border-light)`,
-      transition: 'all 0.3s ease',
-      cursor: 'pointer',
-      animation: 'fadeIn 0.5s ease-out'
-    }}
-    onMouseEnter={(e) => e.currentTarget.style.boxShadow = 'var(--shadow-lg)'}
-    onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'var(--shadow)'}
-    >
-      <div style={{
-        background: 'linear-gradient(135deg, var(--navy-mid) 0%, var(--navy-light) 100%)',
-        padding: '1.5rem',
-        textAlign: 'center',
-        color: 'var(--white)'
-      }}>
-        <img
-          src={member.image}
-          alt={member.name}
-          style={{
-            width: '80px',
-            height: '80px',
-            borderRadius: '50%',
-            marginBottom: '1rem',
-            border: `3px solid var(--gold)`,
-            objectFit: 'cover'
-          }}
-        />
-        <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.25rem' }}>
-          {member.name}
+      <div style={{background:'var(--white)',borderRadius:'var(--radius-lg)',padding:24,boxShadow:'var(--shadow)'}}>
+        <h3 style={{fontSize:15,fontWeight:700,marginBottom:16,display:'flex',alignItems:'center',gap:8}}>
+          <BarChartIcon size={18}/> Top Pharmacy Fields
         </h3>
-        <p style={{ fontSize: '0.85rem', opacity: 0.9, marginBottom: '0.5rem' }}>
-          Class of {member.class}
-        </p>
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          {topFields.map(([name, count]) => (
+            <div key={name}>
+              <div style={{display:'flex',justifyContent:'space-between',fontSize:13,marginBottom:4}}>
+                <span style={{fontWeight:500}}>{name}</span>
+                <span style={{color:'var(--text-muted)'}}>{count} alumni</span>
+              </div>
+              <div style={{height:6,background:'var(--bg)',borderRadius:3,overflow:'hidden'}}>
+                <div style={{height:'100%',width:`${(count/maxField)*100}%`,background:'linear-gradient(90deg, var(--gold), var(--gold-light))',borderRadius:3,transition:'width .4s ease'}}/>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-
-      <div style={{ padding: '1.5rem' }}>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.75rem', fontWeight: 500 }}>
-          {member.role}
-        </p>
-        <p style={{ color: 'var(--text)', fontSize: '0.85rem', marginBottom: '1rem' }}>
-          {member.institution}
-        </p>
-
-        <div style={{ marginBottom: '1rem' }}>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
-            Expertise
-          </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-            {member.expertise.map((skill, idx) => (
-              <span
-                key={idx}
-                style={{
-                  fontSize: '0.75rem',
-                  background: 'var(--border-light)',
-                  color: 'var(--navy)',
-                  padding: '0.3rem 0.7rem',
-                  borderRadius: '12px',
-                  fontWeight: 500
-                }}
-              >
-                {skill}
-              </span>
+      <div style={{gridColumn:'1 / -1',background:'var(--white)',borderRadius:'var(--radius-lg)',padding:24,boxShadow:'var(--shadow)'}}>
+        <h3 style={{fontSize:15,fontWeight:700,marginBottom:16,display:'flex',alignItems:'center',gap:8}}>
+          <MapPinIcon size={18}/> Where Our Alumni Are
+        </h3>
+        <div style={{display:'flex',gap:12,flexWrap:'wrap'}}>
+          {topCities.map(([city, count]) => (
+            <div key={city} style={{
+              padding:'10px 18px',borderRadius:'var(--radius)',
+              background:'var(--bg)',border:'1px solid var(--border-light)',
+              textAlign:'center',minWidth:140
+            }}>
+              <div style={{fontWeight:700,fontSize:20,color:'var(--navy)'}}>{count}</div>
+              <div style={{fontSize:12,color:'var(--text-muted)'}}>{city}</div>
+            </div>
+          ))}
+        </div>
+      
+      <div style={{background:'var(--white)',borderRadius:'var(--radius-lg)',padding:24,boxShadow:'var(--shadow)'}}>
+        <h3 style={{fontSize:15,fontWeight:700,marginBottom:16,display:'flex',alignItems:'center',gap:8}}>
+          <BarChartIcon size={18}/> Top Additional Roles
+        </h3>
+        {topAdditionalRoles.length > 0 ? (
+          <div style={{display:'flex',flexDirection:'column',gap:10}}>
+            {topAdditionalRoles.map(([name, count]) => (
+              <div key={name}>
+                <div style={{display:'flex',justifyContent:'space-between',fontSize:13,marginBottom:4}}>
+                  <span style={{fontWeight:500}}>{name}</span>
+                  <span style={{color:'var(--text-muted)'}}>{count} alumni</span>
+                </div>
+                <div style={{height:6,background:'var(--bg)',borderRadius:3,overflow:'hidden'}}>
+                  <div style={{height:'100%',width:`${(count/maxRoles)*100}%`,background:'linear-gradient(90deg, var(--coral), var(--coral-light))',borderRadius:3,transition:'width .4s ease'}}/>
+                </div>
+              </div>
             ))}
           </div>
-        </div>
-
-        <button
-          onClick={() => setShowDetails(!showDetails)}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            background: 'var(--gold)',
-            color: 'var(--navy)',
-            border: 'none',
-            borderRadius: 'var(--radius)',
-            fontSize: '0.9rem',
-            fontWeight: 600,
-            cursor: 'pointer',
-            transition: 'all 0.3s ease'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'var(--gold-light)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'var(--gold)';
-          }}
-        >
-          {showDetails ? 'Hide Details' : 'View Contact'}
-        </button>
-
-        {showDetails && (
-          <div style={{
-            marginTop: '1rem',
-            paddingTop: '1rem',
-            borderTop: `1px solid var(--border)`,
-            animation: 'fadeIn 0.3s ease-out'
-          }}>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text)', marginBottom: '0.5rem' }}>
-              <strong>Location:</strong> {member.location}
-            </p>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text)', marginBottom: '0.5rem' }}>
-              <strong>Email:</strong> <a href={`mailto:${member.email}`} style={{ color: 'var(--gold)', textDecoration: 'none' }}>{member.email}</a>
-            </p>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text)' }}>
-              <strong>Phone:</strong> <a href={`tel:${member.phone}`} style={{ color: 'var(--gold)', textDecoration: 'none' }}>{member.phone}</a>
-            </p>
-          </div>
+        ) : (
+          <div style={{padding:20,textAlign:'center',color:'var(--text-muted)',fontSize:14}}>No additional roles found</div>
         )}
       </div>
+</div>
     </div>
   );
 }
 
-function Footer() {
-  return (
-    <footer style={{
-      background: 'var(--navy)',
-      color: 'var(--white)',
-      padding: '3rem 2rem',
-      textAlign: 'center',
-      marginTop: '3rem'
-    }}>
-      <h3 style={{ fontSize: '1.3rem', marginBottom: '1rem', fontFamily: "'Playfair Display', serif" }}>
-        XUPharmConnect
-      </h3>
-      <p style={{ opacity: 0.9, marginBottom: '1rem' }}>
-        Connecting Xavier College of Pharmacy Alumni Worldwide
-      </p>
-      <p style={{ fontSize: '0.85rem', opacity: 0.7, marginBottom: '1rem' }}>
-        Survey conducted in 2024 | 34 Alumni respondents
-      </p>
-      <p style={{ fontSize: '0.8rem', opacity: 0.6 }}>
-        © 2024 Xavier College of Pharmacy Alumni Association. All rights reserved.
-      </p>
-    </footer>
-  );
-}
-
-// ============= MAIN APP =============
-
+// ─── MAIN APP ───────────────────────────────────────────────────────
 function App() {
+  const [search, setSearch] = useState('');
+  const [fieldFilter, setFieldFilter] = useState('');
+  const [companyFilter, setCompanyFilter] = useState('');
+  const [additionalRoleFilter, setAdditionalRoleFilter] = useState('');
+  const [positionFilter, setPositionFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [yearFilter, setYearFilter] = useState('');
+  const [viewMode, setViewMode] = useState('grid');
+  const [activeTab, setActiveTab] = useState('directory');
+  const [contactPerson, setContactPerson] = useState(null);
+  const [showUpload, setShowUpload] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
+  const [page, setPage] = useState(1);
+  const PER_PAGE = viewMode === 'grid' ? 12 : 20;
+
+  const filtered = useMemo(() => {
+    return ALUMNI_DATA.filter(p => {
+      const q = search.toLowerCase();
+      const matchesSearch = !q ||
+        `${p.firstName} ${p.lastName}`.toLowerCase().includes(q) ||
+        p.company.toLowerCase().includes(q) ||
+        p.position.toLowerCase().includes(q) ||
+        p.field.toLowerCase().includes(q) ||
+        p.city.toLowerCase().includes(q) ||
+        p.additionalRoles.some(r => r.toLowerCase().includes(q));
+      const matchesField = !fieldFilter || p.field === fieldFilter;
+      const matchesCompany = !companyFilter || p.company === companyFilter;
+      const matchesPosition = !positionFilter || p.position === positionFilter;
+      const matchesStatus = !statusFilter ||
+        (statusFilter === 'current' && p.isCurrent) ||
+        (statusFilter === 'past' && !p.isCurrent);
+      const matchesYear = !yearFilter || String(p.gradYear) === yearFilter;
+      const matchesAdditionalRole = !additionalRoleFilter || (p.additionalRoles && p.additionalRoles.includes(additionalRoleFilter));
+      return matchesSearch && matchesField && matchesCompany && matchesPosition && matchesStatus && matchesYear && matchesAdditionalRole;
+    });
+  }, [search, fieldFilter, companyFilter, positionFilter, statusFilter, yearFilter, additionalRoleFilter]);
+
+  const paginated = filtered.slice(0, page * PER_PAGE);
+  const hasMore = paginated.length < filtered.length;
+  const activeFilters = [fieldFilter, companyFilter, positionFilter, statusFilter, yearFilter].filter(Boolean).length;
+
+  const clearFilters = () => {
+    setFieldFilter('');setCompanyFilter('');setPositionFilter('');setStatusFilter('');setYearFilter('');setAdditionalRoleFilter('');setSearch('');
+  };
+
+  const uniqueAdditionalRoles = useMemo(() => {
+    return [...new Set(ALUMNI_DATA.flatMap(p => p.additionalRoles || []))].sort();
+  }, []);
+
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Header />
-      <SurveyHighlights />
-      <MembersSection />
-      <Footer />
+    <div style={{minHeight:'100vh',display:'flex',flexDirection:'column'}}>
+      {/* ── HEADER ── */}
+      <header style={{
+        background:'var(--navy)',color:'#fff',position:'sticky',top:0,zIndex:100,
+        boxShadow:'0 2px 20px rgba(10,22,40,0.3)'
+      }}>
+        <div style={{maxWidth:1320,margin:'0 auto',padding:'0 28px'}}>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',height:68}}>
+            <div style={{display:'flex',alignItems:'center',gap:14}}>
+              {/* Logo mark */}
+              <div style={{
+                width:40,height:40,borderRadius:10,
+                background:'linear-gradient(135deg, var(--gold), var(--gold-dark))',
+                display:'flex',alignItems:'center',justifyContent:'center',
+                fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:800,color:'var(--navy)'
+              }}>X</div>
+              <div>
+                <div style={{fontSize:18,fontWeight:700,letterSpacing:'-0.3px',lineHeight:1.1}}>XUPharmConnect</div>
+                <div style={{fontSize:11,opacity:0.6,letterSpacing:'0.5px'}}>XAVIER COLLEGE OF PHARMACY NETWORK</div>
+              </div>
+            </div>
+            <nav style={{display:'flex',gap:4}}>
+              {[['directory','Directory'],['insights','Insights']].map(([key,label])=>(
+                <button key={key} onClick={()=>{setActiveTab(key);setPage(1)}} style={{
+                  padding:'8px 18px',borderRadius:6,border:'none',fontSize:14,fontWeight:500,
+                  background: activeTab===key ? 'rgba(255,197,48,0.15)' : 'transparent',
+                  color: activeTab===key ? 'var(--gold)' : 'rgba(255,255,255,0.65)',
+                  transition:'all .15s'
+                }}>{label}</button>
+              ))}
+            </nav>
+            <button onClick={()=>setShowUpload(true)} style={{
+              padding:'9px 20px',borderRadius:'var(--radius)',border:'none',
+              background:'var(--gold)',color:'var(--navy)',fontWeight:700,fontSize:14,
+              display:'flex',alignItems:'center',gap:7,transition:'background .15s'
+            }}
+            onMouseEnter={e=>e.target.style.background='var(--gold-light)'}
+            onMouseLeave={e=>e.target.style.background='var(--gold)'}
+            ><UploadIcon size={16}/> Join Network</button>
+          </div>
+        </div>
+      </header>
+
+      {/* ── HERO BANNER ── */}
+      <div style={{
+        background:'linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 50%, var(--navy-mid) 100%)',
+        padding:'36px 28px 32px',position:'relative',overflow:'hidden'
+      }}>
+        {/* Decorative circles */}
+        <div style={{position:'absolute',top:-60,right:-40,width:200,height:200,borderRadius:'50%',background:'rgba(255,197,48,0.05)'}}/>
+        <div style={{position:'absolute',bottom:-80,left:'30%',width:300,height:300,borderRadius:'50%',background:'rgba(255,197,48,0.03)'}}/>
+
+        <div style={{maxWidth:1320,margin:'0 auto',position:'relative',zIndex:1}}>
+          <h1 style={{
+            fontFamily:"'Playfair Display',serif",fontSize:32,fontWeight:800,color:'#fff',
+            marginBottom:6,lineHeight:1.2
+          }}>Find Your Xavier Pharmacy Network</h1>
+          <p style={{color:'rgba(255,255,255,0.6)',fontSize:15,marginBottom:24,maxWidth:600}}>
+            Connect with {ALUMNI_DATA.length}+ alumni and current students across every field of pharmacy. Search by company, specialty, or position.
+          </p>
+
+          {/* Search bar */}
+          <div style={{display:'flex',gap:10,maxWidth:640}}>
+            <div style={{flex:1,position:'relative'}}>
+              <div style={{position:'absolute',left:14,top:'50%',transform:'translateY(-50%)',color:'var(--text-muted)'}}>
+                <SearchIcon size={18}/>
+              </div>
+              <input
+                value={search} onChange={e=>{setSearch(e.target.value);setPage(1)}}
+                placeholder="Search by name, company, position, field, or city..."
+                style={{
+                  width:'100%',padding:'13px 14px 13px 42px',borderRadius:'var(--radius)',
+                  border:'2px solid transparent',fontSize:15,outline:'none',
+                  background:'var(--white)',transition:'border-color .2s'
+                }}
+                onFocus={e=>e.target.style.borderColor='var(--gold)'}
+                onBlur={e=>e.target.style.borderColor='transparent'}
+              />
+            </div>
+            <button onClick={()=>setShowFilters(!showFilters)} style={{
+              padding:'0 18px',borderRadius:'var(--radius)',
+              border: showFilters ? '2px solid var(--gold)' : '2px solid rgba(255,255,255,0.2)',
+              background: showFilters ? 'rgba(255,197,48,0.1)' : 'rgba(255,255,255,0.05)',
+              color: showFilters ? 'var(--gold)' : 'rgba(255,255,255,0.7)',
+              fontSize:14,fontWeight:500,display:'flex',alignItems:'center',gap:6,
+              transition:'all .15s',position:'relative'
+            }}>
+              <FilterIcon size={16}/> Filters
+              {activeFilters > 0 && (
+                <span style={{
+                  position:'absolute',top:-6,right:-6,width:20,height:20,borderRadius:'50%',
+                  background:'var(--gold)',color:'var(--navy)',fontSize:11,fontWeight:700,
+                  display:'flex',alignItems:'center',justifyContent:'center'
+                }}>{activeFilters}</span>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ── FILTERS ── */}
+      {showFilters && activeTab === 'directory' && (
+        <div className="animate-fade" style={{
+          background:'var(--white)',borderBottom:'1px solid var(--border-light)',
+          padding:'16px 28px'
+        }}>
+          <div style={{maxWidth:1320,margin:'0 auto',display:'flex',gap:12,flexWrap:'wrap',alignItems:'flex-end'}}>
+            <SelectDropdown label="Field of Pharmacy" value={fieldFilter} onChange={v=>{setFieldFilter(v);setPage(1)}} options={PHARMACY_FIELDS} placeholder="All Fields"/>
+            <SelectDropdown label="Company" value={companyFilter} onChange={v=>{setCompanyFilter(v);setPage(1)}} options={COMPANIES.sort()} placeholder="All Companies"/>
+            <SelectDropdown label="Position" value={positionFilter} onChange={v=>{setPositionFilter(v);setPage(1)}} options={POSITIONS} placeholder="All Positions"/>
+            <SelectDropdown label="Status" value={statusFilter} onChange={v=>{setStatusFilter(v);setPage(1)}} options={['current','past']} placeholder="Current & Past"/>
+            <SelectDropdown label="Add'l Roles" value={additionalRoleFilter} onChange={v=>{setAdditionalRoleFilter(v);setPage(1)}} options={uniqueAdditionalRoles} placeholder="All Roles"/>
+            <SelectDropdown label="Grad Year" value={yearFilter} onChange={v=>{setYearFilter(v);setPage(1)}} options={GRAD_YEARS.map(String)} placeholder="All Years"/>
+            {activeFilters > 0 && (
+              <button onClick={clearFilters} style={{
+                padding:'10px 16px',borderRadius:'var(--radius)',border:'1px solid var(--border)',
+                background:'transparent',fontSize:13,fontWeight:500,color:'var(--text-secondary)',
+                display:'flex',alignItems:'center',gap:5,whiteSpace:'nowrap',marginBottom:0,
+                alignSelf:'flex-end'
+              }}><XIcon size={14}/> Clear all</button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── CONTENT ── */}
+      <main style={{flex:1,maxWidth:1320,margin:'0 auto',padding:'24px 28px',width:'100%'}}>
+        {activeTab === 'directory' && (
+          <>
+            {/* Toolbar */}
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
+              <div style={{fontSize:14,color:'var(--text-secondary)'}}>
+                <strong style={{color:'var(--text)'}}>{filtered.length}</strong> alumni found
+                {activeFilters > 0 && <span> with {activeFilters} filter{activeFilters>1?'s':''} applied</span>}
+              </div>
+              <div style={{display:'flex',gap:4,background:'var(--bg)',borderRadius:'var(--radius)',padding:3}}>
+                {[['grid',<GridIcon size={16}/>],['list',<ListIcon size={16}/>]].map(([mode,icon])=>(
+                  <button key={mode} onClick={()=>{setViewMode(mode);setPage(1)}} style={{
+                    padding:'6px 12px',borderRadius:6,border:'none',
+                    background: viewMode===mode ? 'var(--white)' : 'transparent',
+                    boxShadow: viewMode===mode ? 'var(--shadow)' : 'none',
+                    color: viewMode===mode ? 'var(--navy)' : 'var(--text-muted)',
+                    display:'flex',alignItems:'center',transition:'all .15s'
+                  }}>{icon}</button>
+                ))}
+              </div>
+            </div>
+
+            {/* Results */}
+            {filtered.length === 0 ? (
+              <div style={{textAlign:'center',padding:'60px 20px'}}>
+                <div style={{fontSize:48,marginBottom:12}}>🔍</div>
+                <h3 style={{fontSize:18,fontWeight:600,marginBottom:8}}>No alumni found</h3>
+                <p style={{color:'var(--text-muted)',fontSize:14,marginBottom:16}}>Try adjusting your filters or search terms.</p>
+                <button onClick={clearFilters} style={{padding:'10px 20px',borderRadius:'var(--radius)',border:'none',background:'var(--navy)',color:'#fff',fontSize:14,fontWeight:600}}>Clear All Filters</button>
+              </div>
+            ) : viewMode === 'grid' ? (
+              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill, minmax(300px, 1fr))',gap:16}}>
+                {paginated.map(p => <AlumniCard key={p.id} person={p} onContact={setContactPerson} viewMode="grid"/>)}
+              </div>
+            ) : (
+              <div style={{background:'var(--white)',borderRadius:'var(--radius-lg)',boxShadow:'var(--shadow)',overflow:'hidden'}}>
+                {/* List header */}
+                <div style={{display:'flex',alignItems:'center',gap:16,padding:'10px 20px',background:'var(--bg)',fontSize:11,fontWeight:600,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'.5px'}}>
+                  <div style={{width:42}}/>
+                  <div style={{flex:1}}>Name</div>
+                  <div style={{minWidth:100,textAlign:'center'}}>Field</div>
+                  <div style={{minWidth:60,textAlign:'center'}}>Year</div>
+                  <div style={{minWidth:120}}>Location</div>
+                  <div style={{minWidth:68}}>Status</div>
+                  <div style={{minWidth:72}}>Actions</div>
+                </div>
+                {paginated.map(p => <AlumniCard key={p.id} person={p} onContact={setContactPerson} viewMode="list"/>)}
+              </div>
+            )}
+
+            {/* Load more */}
+            {hasMore && (
+              <div style={{textAlign:'center',marginTop:24}}>
+                <button onClick={()=>setPage(p=>p+1)} style={{
+                  padding:'12px 32px',borderRadius:'var(--radius)',border:'2px solid var(--navy)',
+                  background:'transparent',color:'var(--navy)',fontSize:14,fontWeight:600,
+                  transition:'all .15s'
+                }}
+                onMouseEnter={e=>{e.target.style.background='var(--navy)';e.target.style.color='#fff'}}
+                onMouseLeave={e=>{e.target.style.background='transparent';e.target.style.color='var(--navy)'}}
+                >Load More ({filtered.length - paginated.length} remaining)</button>
+              </div>
+            )}
+          </>
+        )}
+
+        {activeTab === 'insights' && <InsightsPanel data={filtered}/>}
+      </main>
+
+      {/* ── STATS BAR ── */}
+      <div style={{background:'var(--white)',borderTop:'1px solid var(--border-light)',padding:'16px 28px'}}>
+        <div style={{maxWidth:1320,margin:'0 auto',display:'grid',gridTemplateColumns:'repeat(4, 1fr)',gap:16}}>
+          <StatCard icon={<GraduationIcon size={22}/>} label="Total Alumni" value={ALUMNI_DATA.length}/>
+          <StatCard icon={<UserIcon size={24}/>} label="Alumni with Side Roles" value={ALUMNI_DATA.filter(a => a.additionalRoles.length > 0).length} accent="var(--coral)" />
+          <StatCard icon={<BuildingIcon size={22}/>} label="Companies Represented" value={new Set(ALUMNI_DATA.map(p=>p.company)).size} accent="var(--teal)"/>
+          <StatCard icon={<BriefcaseIcon size={22}/>} label="Pharmacy Fields" value={new Set(ALUMNI_DATA.map(p=>p.field)).size} accent="var(--navy-mid)"/>
+          <StatCard icon={<MapPinIcon size={22}/>} label="Cities Covered" value={new Set(ALUMNI_DATA.map(p=>p.city)).size} accent="#e85d75"/>
+        </div>
+      </div>
+
+      {/* ── FOOTER ── */}
+      <footer style={{background:'var(--navy)',color:'rgba(255,255,255,0.5)',padding:'20px 28px',fontSize:12,textAlign:'center'}}>
+        <div style={{maxWidth:1320,margin:'0 auto'}}>
+          XUPharmConnect — A Vision for the Affinity Group · Xavier University of Louisiana College of Pharmacy · Powered by XULA Alumni
+        </div>
+      </footer>
+
+      {/* ── MODALS ── */}
+      {contactPerson && <ContactModal person={contactPerson} onClose={()=>setContactPerson(null)}/>}
+      {showUpload && <UploadModal onClose={()=>setShowUpload(false)}/>}
     </div>
   );
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
 </body>
 </html>
