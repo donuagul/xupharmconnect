@@ -389,7 +389,7 @@ function AlumniCard({person, onContact, viewMode}) {
         boxShadow: hovered ? 'var(--shadow-lg)' : 'var(--shadow)',
         transform: hovered ? 'translateY(-2px)' : 'none',
         transition:'all .2s ease',overflow:'hidden',position:'relative',
-        border: 'none'
+        border: \'none\'
       }}>
       {/* Featured badge */}
       {person.featured && (
@@ -762,15 +762,19 @@ function App() {
       const matchesAdditionalRole = !additionalRoleFilter || (p.additionalRoles && p.additionalRoles.includes(additionalRoleFilter));
       return matchesSearch && matchesField && matchesCompany && matchesPosition && matchesStatus && matchesYear && matchesAdditionalRole;
     });
-  }, [search, fieldFilter, companyFilter, positionFilter, statusFilter, yearFilter]);
+  }, [search, fieldFilter, companyFilter, positionFilter, statusFilter, yearFilter, additionalRoleFilter]);
 
   const paginated = filtered.slice(0, page * PER_PAGE);
   const hasMore = paginated.length < filtered.length;
   const activeFilters = [fieldFilter, companyFilter, positionFilter, statusFilter, yearFilter].filter(Boolean).length;
 
   const clearFilters = () => {
-    setFieldFilter('');setCompanyFilter('');setPositionFilter('');setStatusFilter('');setYearFilter('');setSearch('');
+    setFieldFilter('');setCompanyFilter('');setPositionFilter('');setStatusFilter('');setYearFilter('');setAdditionalRoleFilter('');setSearch('');
   };
+
+  const uniqueAdditionalRoles = useMemo(() => {
+    return [...new Set(ALUMNI_DATA.flatMap(p => p.additionalRoles || []))].sort();
+  }, []);
 
   return (
     <div style={{minHeight:'100vh',display:'flex',flexDirection:'column'}}>
