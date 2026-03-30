@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>XUPharmConnect — Xavier College of Pharmacy Alumni Network</title>
+<title>XUPharmConnect â Xavier College of Pharmacy Alumni Network</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
@@ -38,7 +38,7 @@ input,select,textarea{font-family:inherit}
 <script type="text/babel">
 const { useState, useMemo, useCallback, useRef, useEffect } = React;
 
-// ─── DATA ───────────────────────────────────────────────────────────
+// âââ DATA âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 const PHARMACY_FIELDS = [
   "Community Pharmacy","Hospital / Health-System","Clinical Pharmacy",
   "Pharmaceutical Industry","Managed Care","Ambulatory Care",
@@ -86,7 +86,7 @@ const ADDITIONAL_ROLES = [
 
 
 // Real PAG member names from GroupMe (326 members)
-// Professional data is placeholder — will be replaced as members update their profiles
+// Professional data is placeholder â will be replaced as members update their profiles
 const REAL_MEMBERS = [
   {f:"Lisa",l:"Wilkerson",y:1993},{f:"Kris",l:"Spears",y:null},{f:"Krystene",l:"Woodard",y:1996},
   {f:"Robin",l:"Vidal",y:null},{f:"Rosiland",l:"Burton",y:null},{f:"A.",l:"Hogan-Williams",y:null},
@@ -172,7 +172,7 @@ const REAL_MEMBERS = [
   {f:"Paul",l:"Young",y:null},{f:"Pedie",l:"Horton",y:null},{f:"Phaedra",l:"Howard Honore",y:null},
   {f:"Jaimaya",l:"Bolden",y:null},{f:"Pheo",l:"Glover",y:null},{f:"Philecia",l:"Avery",y:null},
   {f:"Porsche",l:"Forman",y:null},{f:"Portia",l:"Brown",y:null},{f:"Q'Wanyu",l:"Tutt",y:null},
-  {f:"Rae",l:"Smith",y:null},{f:"Ramonda",l:"McNair Howard",y:1997},{f:"Rashida",l:"François",y:null},
+  {f:"Rae",l:"Smith",y:null},{f:"Ramonda",l:"McNair Howard",y:1997},{f:"Rashida",l:"FranÃ§ois",y:null},
   {f:"Raynelle",l:"J.",y:null},{f:"Regilyn",l:"",y:null},{f:"Rekesha",l:"Harrell",y:null},
   {f:"Renard",l:"Hill",y:null},{f:"Rhonda",l:"Denson",y:null},{f:"Robert",l:"DeFrantz",y:null},
   {f:"Rosa",l:"Jordan",y:null},{f:"Rustin",l:"Henry",y:null},{f:"RuthAnn",l:"",y:null},
@@ -181,7 +181,7 @@ const REAL_MEMBERS = [
   {f:"Sandy",l:"Hunter",y:null},{f:"Shannon",l:"Douglas",y:null},{f:"Sharell",l:"Cheatham",y:null},
   {f:"ShaRhonda",l:"Watkins-Curry",y:null},{f:"Shavitress",l:"Briggs",y:null},
   {f:"Shelton",l:"Watkins",y:null},{f:"Shenita",l:"Outland",y:null},{f:"Sherita",l:"Castille",y:null},
-  {f:"Shonté",l:"McCain",y:null},{f:"Sonya",l:"Carter",y:null},{f:"Steven",l:"Player",y:null},
+  {f:"ShontÃ©",l:"McCain",y:null},{f:"Sonya",l:"Carter",y:null},{f:"Steven",l:"Player",y:null},
   {f:"Sylvia",l:"",y:null},{f:"Takeesa",l:"James",y:null},{f:"Tala",l:"Johnson-Burl",y:null},
   {f:"Tamara",l:"E.",y:null},{f:"Tamarah",l:"Walker",y:null},{f:"Tamika",l:"",y:null},
   {f:"Tamiko",l:"Hickman",y:null},{f:"Tammy",l:"Hobbs",y:null},{f:"Tammy",l:"McCray",y:null},
@@ -202,7 +202,7 @@ const REAL_MEMBERS = [
 
 const CITIES = ["New Orleans, LA","Houston, TX","Atlanta, GA","Baton Rouge, LA","Dallas, TX","Memphis, TN","Charlotte, NC","Chicago, IL","Washington, DC","Baltimore, MD","Birmingham, AL","Jackson, MS","San Francisco, CA","New York, NY","Philadelphia, PA","Detroit, MI","Miami, FL","Los Angeles, CA","Boston, MA","Nashville, TN"];
 
-// Survey data overrides — real info from PAG member survey (46 respondents)
+// Survey data overrides â real info from PAG member survey (46 respondents)
 const SURVEY_OVERRIDES = {
   "Kris|Spears":{position:"Pharmacy Manager",company:"Publix",city:"Atlanta, GA",field:"Community Pharmacy",gradYear:2000,email:"kgspirit17@gmail.com"},
   "Kristina|Carter":{position:"Clinical Strategy Manager",company:"CareSource",city:"Atlanta, GA",field:"Managed Care",gradYear:2000,email:"Drkris1908@gmail.com"},
@@ -306,7 +306,7 @@ ALUMNI_DATA.unshift({
   gradYear: 2018,
   field: "Community Pharmacy",
   company: "Wellwise Pharmacy",
-  position: "Pharmacist-In-Charge & Owner / PAG President-Elect",
+  position: "Pharmacist-In-Charge & Owner / Running for XUCOP P.A.G. President-Elect",
   city: "Houston, TX",
   isCurrent: true,
   email: "drdj@wellwiserx.com",
@@ -319,7 +319,7 @@ ALUMNI_DATA.unshift({
   hasSurveyData: true
 });
 
-// ─── ICONS (inline SVG) ─────────────────────────────────────────────
+// âââ ICONS (inline SVG) âââââââââââââââââââââââââââââââââââââââââââââ
 const Icon = ({d, size=20, color="currentColor", ...props}) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
     stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -344,7 +344,7 @@ const GridIcon = (p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0
 const ListIcon = (p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="18" r="1" fill="currentColor"/></svg>;
 const StarIcon = (p) => <svg width={p.size||16} height={p.size||16} viewBox="0 0 24 24" fill={p.filled?"var(--gold)":"none"} stroke={p.filled?"var(--gold)":"currentColor"} strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>;
 
-// ─── COMPONENTS ─────────────────────────────────────────────────────
+// âââ COMPONENTS âââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function StatCard({icon, label, value, accent}) {
   return (
     <div style={{
@@ -573,7 +573,7 @@ function ContactModal({person, onClose}) {
             <div>
               <div style={{fontWeight:600}}>{person.firstName} {person.lastName}</div>
               <div style={{fontSize:13,color:'var(--text-secondary)'}}>{person.position} at {person.company}</div>
-              <div style={{fontSize:12,color:'var(--text-muted)'}}>Class of {person.gradYear} · {person.city}</div>
+              <div style={{fontSize:12,color:'var(--text-muted)'}}>Class of {person.gradYear} Â· {person.city}</div>
             </div>
           </div>
           <label style={{display:'block',fontSize:13,fontWeight:600,color:'var(--text-secondary)',marginBottom:6}}>Your Message</label>
@@ -641,7 +641,7 @@ function UploadModal({onClose}) {
             <div style={{fontWeight:600,fontSize:15,marginBottom:4}}>Drop your file here or click to upload</div>
             <div style={{fontSize:13,color:'var(--text-muted)'}}>Accepts: PDF resume, LinkedIn profile export, or .txt</div>
           </div>
-          <div style={{textAlign:'center',color:'var(--text-muted)',fontSize:13,marginBottom:16}}>— or paste your LinkedIn URL —</div>
+          <div style={{textAlign:'center',color:'var(--text-muted)',fontSize:13,marginBottom:16}}>â or paste your LinkedIn URL â</div>
           <div style={{display:'flex',gap:8}}>
             <input placeholder="https://linkedin.com/in/yourprofile" style={{
               flex:1,padding:'10px 14px',border:'1.5px solid var(--border)',borderRadius:'var(--radius)',
@@ -778,7 +778,7 @@ function InsightsPanel({data}) {
   );
 }
 
-// ─── MAIN APP ───────────────────────────────────────────────────────
+// âââ MAIN APP âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function App() {
   const [search, setSearch] = useState('');
   const [fieldFilter, setFieldFilter] = useState('');
@@ -831,7 +831,7 @@ function App() {
 
   return (
     <div style={{minHeight:'100vh',display:'flex',flexDirection:'column'}}>
-      {/* ── HEADER ── */}
+      {/* ââ HEADER ââ */}
       <header style={{
         background:'var(--navy)',color:'#fff',position:'sticky',top:0,zIndex:100,
         boxShadow:'0 2px 20px rgba(10,22,40,0.3)'
@@ -873,7 +873,7 @@ function App() {
         </div>
       </header>
 
-      {/* ── HERO BANNER ── */}
+      {/* ââ HERO BANNER ââ */}
       <div style={{
         background:'linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 50%, var(--navy-mid) 100%)',
         padding:'36px 28px 32px',position:'relative',overflow:'hidden'
@@ -930,7 +930,7 @@ function App() {
         </div>
       </div>
 
-      {/* ── FILTERS ── */}
+      {/* ââ FILTERS ââ */}
       {showFilters && activeTab === 'directory' && (
         <div className="animate-fade" style={{
           background:'var(--white)',borderBottom:'1px solid var(--border-light)',
@@ -955,7 +955,7 @@ function App() {
         </div>
       )}
 
-      {/* ── CONTENT ── */}
+      {/* ââ CONTENT ââ */}
       <main style={{flex:1,maxWidth:1320,margin:'0 auto',padding:'24px 28px',width:'100%'}}>
         {activeTab === 'directory' && (
           <>
@@ -981,7 +981,7 @@ function App() {
             {/* Results */}
             {filtered.length === 0 ? (
               <div style={{textAlign:'center',padding:'60px 20px'}}>
-                <div style={{fontSize:48,marginBottom:12}}>🔍</div>
+                <div style={{fontSize:48,marginBottom:12}}>ð</div>
                 <h3 style={{fontSize:18,fontWeight:600,marginBottom:8}}>No alumni found</h3>
                 <p style={{color:'var(--text-muted)',fontSize:14,marginBottom:16}}>Try adjusting your filters or search terms.</p>
                 <button onClick={clearFilters} style={{padding:'10px 20px',borderRadius:'var(--radius)',border:'none',background:'var(--navy)',color:'#fff',fontSize:14,fontWeight:600}}>Clear All Filters</button>
@@ -1025,7 +1025,7 @@ function App() {
         {activeTab === 'insights' && <InsightsPanel data={filtered}/>}
       </main>
 
-      {/* ── STATS BAR ── */}
+      {/* ââ STATS BAR ââ */}
       <div style={{background:'var(--white)',borderTop:'1px solid var(--border-light)',padding:'16px 28px'}}>
         <div style={{maxWidth:1320,margin:'0 auto',display:'grid',gridTemplateColumns:'repeat(4, 1fr)',gap:16}}>
           <StatCard icon={<GraduationIcon size={22}/>} label="Total Alumni" value={ALUMNI_DATA.length}/>
@@ -1036,14 +1036,14 @@ function App() {
         </div>
       </div>
 
-      {/* ── FOOTER ── */}
+      {/* ââ FOOTER ââ */}
       <footer style={{background:'var(--navy)',color:'rgba(255,255,255,0.5)',padding:'20px 28px',fontSize:12,textAlign:'center'}}>
         <div style={{maxWidth:1320,margin:'0 auto'}}>
-          XUPharmConnect — A Vision for the Affinity Group · Xavier University of Louisiana College of Pharmacy · Powered by XULA Alumni
+          XUPharmConnect â A Vision for the Affinity Group Â· Xavier University of Louisiana College of Pharmacy Â· Powered by XULA Alumni
         </div>
       </footer>
 
-      {/* ── MODALS ── */}
+      {/* ââ MODALS ââ */}
       {contactPerson && <ContactModal person={contactPerson} onClose={()=>setContactPerson(null)}/>}
       {showUpload && <UploadModal onClose={()=>setShowUpload(false)}/>}
     </div>
