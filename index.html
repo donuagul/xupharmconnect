@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>XUPharmConnect â Xavier College of Pharmacy Alumni Network</title>
+<title>XUPharmConnect Ã¢ÂÂ Xavier College of Pharmacy Alumni Network</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
@@ -38,7 +38,7 @@ input,select,textarea{font-family:inherit}
 <script type="text/babel">
 const { useState, useMemo, useCallback, useRef, useEffect } = React;
 
-// âââ DATA âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ DATA Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 const PHARMACY_FIELDS = [
   "Community Pharmacy","Hospital / Health-System","Clinical Pharmacy",
   "Pharmaceutical Industry","Managed Care","Ambulatory Care",
@@ -86,159 +86,48 @@ const ADDITIONAL_ROLES = [
 
 
 // Real PAG member names from GroupMe (326 members)
-// Professional data is placeholder â will be replaced as members update their profiles
+// Professional data is placeholder Ã¢ÂÂ will be replaced as members update their profiles
 const REAL_MEMBERS = [
-  {f:"Lisa",l:"Wilkerson",y:1993},{f:"Kris",l:"Spears",y:null},{f:"Krystene",l:"Woodard",y:1996},
-  {f:"Robin",l:"Vidal",y:null},{f:"Rosiland",l:"Burton",y:null},{f:"A.",l:"Hogan-Williams",y:null},
-  {f:"Adrienne",l:"Johnson",y:null},{f:"Adrienne",l:"T.",y:null},{f:"Alayne",l:"Alozie",y:null},
-  {f:"Alessandra",l:"Thompson",y:null},{f:"Alexis",l:"Omari",y:null},{f:"Alisha",l:"Patterson",y:null},
-  {f:"Alisha",l:"Reed",y:null},{f:"Aliya",l:"Brown",y:null},{f:"Allegra",l:"Fadeyi",y:null},
-  {f:"Alvin",l:"Blackmon",y:null},{f:"Ambra",l:"Hannah",y:null},{f:"Anasa",l:"",y:1997},
-  {f:"Andrea",l:"Collier Johnson",y:null},{f:"Angele",l:"White",y:null},{f:"Anika",l:"Bell",y:null},
-  {f:"Anisa",l:"Browning",y:null},{f:"Ann",l:"Grimmette",y:null},{f:"Antoinette",l:"Marks",y:1989},
-  {f:"April",l:"Adams",y:null},{f:"April",l:"Bolden",y:null},{f:"Arian",l:"Lemon",y:null},
-  {f:"Ariel",l:"",y:null},{f:"Arnette",l:"Cordova",y:null},{f:"Ayana",l:"Henderson",y:null},
-  {f:"Bernard",l:"Hill",y:2015},{f:"Brandon",l:"Edgerson",y:null},{f:"Breannie",l:"Charles",y:null},
-  {f:"Bridgit",l:"Maniger",y:null},{f:"Britney",l:"Woods",y:null},{f:"Brittany",l:"Bush",y:null},
-  {f:"Calvin",l:"Magee",y:null},{f:"Candice",l:"Montgomery Pankey",y:null},{f:"Carl",l:"Dawson",y:null},
-  {f:"Carnecia",l:"Greene",y:null},{f:"Cassandra",l:"Penny",y:null},{f:"Cedric",l:"Cloud",y:null},
-  {f:"Cedric",l:"Torry",y:null},{f:"Ceressa",l:"Ward",y:null},{f:"Chandra",l:"Howell",y:null},
-  {f:"Chandra",l:"Green",y:null},{f:"Chandra",l:"McGowan",y:null},{f:"Chanel",l:"Bennett",y:null},
-  {f:"Charles",l:"M.",y:null},{f:"Chelsea",l:"Smith",y:null},{f:"China",l:"Stewart",y:null},
-  {f:"Chris",l:"Johnson",y:null},{f:"Christina",l:"Brooks",y:null},{f:"Christina",l:"Victor",y:null},
-  {f:"Cindy",l:"H.",y:null},{f:"Cori",l:"Brock Cooper",y:null},{f:"Courtney",l:"Chavis",y:null},
-  {f:"Cre",l:"",y:null},{f:"Crystal",l:"Cleveland",y:null},{f:"Crystal",l:"Mitchell",y:null},
-  {f:"Daina",l:"Nelson",y:null},{f:"Dale",l:"Martin",y:null},{f:"Dana",l:"McDade",y:null},
-  {f:"Danielle",l:"Davis",y:null},{f:"Danielle",l:"Keith",y:null},{f:"Danielle",l:"Nwigwe",y:null},
-  {f:"Danique",l:"Richard",y:null},{f:"Dante",l:"D.",y:null},{f:"Dawn",l:"L.R.",y:null},
-  {f:"Dawn",l:"Purcell",y:null},{f:"Da'Sha",l:"Richard",y:null},{f:"Deirdre",l:"Mallet",y:null},
-  {f:"Del",l:"McKnight",y:null},{f:"Deloris",l:"Mabins",y:null},{f:"Delphine",l:"Adams",y:null},
-  {f:"Delveatra",l:"Clements",y:null},{f:"Demorea",l:"Harper",y:null},{f:"Denise",l:"Coleman",y:null},
-  {f:"Devin",l:"Hawkins",y:null},{f:"Devita",l:"Barnes",y:null},{f:"Diamond",l:"Scott",y:null},
-  {f:"Diana",l:"Toogood",y:null},{f:"Donna",l:"Herbert",y:null},{f:"NaShawnda",l:"Thomas",y:null},
-  {f:"Felecia",l:"",y:null},{f:"Brionne",l:"Bush",y:null},{f:"Chelsea",l:"Amerson",y:null},
-  {f:"Christina",l:"Bolden White",y:null},{f:"Danielle",l:"Hampton",y:null},
-  {f:"Dionne",l:"Payne",y:null},{f:"Gia",l:"McLean",y:null},{f:"Jade",l:"Parker",y:null},
-  {f:"Jarryn",l:"Cleaves",y:null},{f:"Katashia",l:"Partee Kendrick",y:null},
-  {f:"Lakeisha",l:"Jackson-Patton",y:null},{f:"Porscha",l:"Showers",y:null},
-  {f:"Ravin",l:"Milton",y:null},{f:"Tonya",l:"Thomas-Blackman",y:null},
-  {f:"Willene",l:"Haywood",y:null},{f:"Phaedra",l:"Jordan",y:null},{f:"Stacie",l:"Williams",y:null},
-  {f:"Eden",l:"Keller",y:null},{f:"Edward",l:"Stemley",y:null},{f:"Elicia",l:"",y:null},
-  {f:"Emma",l:"Aristide",y:null},{f:"Eric",l:"Slater",y:null},{f:"Erica",l:"Chavis",y:null},
-  {f:"Erica",l:"Hall",y:null},{f:"Ericka",l:"Lassair",y:null},{f:"Erika",l:"G.",y:null},
-  {f:"Erika",l:"Wilson",y:null},{f:"Erin",l:"Searles",y:null},{f:"Ernest",l:"L.",y:null},
-  {f:"Felicia",l:"Aron",y:null},{f:"Felicia",l:"Macon",y:null},{f:"Felicia",l:"Townsel",y:null},
-  {f:"Genee'",l:"Schexnayder",y:null},{f:"Genella",l:"Slater",y:null},{f:"General",l:"Peay",y:null},
-  {f:"George",l:"Clayton",y:null},{f:"Gerald",l:"Evans",y:null},{f:"Geralyn",l:"Magee Isaac",y:null},
-  {f:"Germaine",l:"",y:null},{f:"Germaine",l:"Croom",y:null},{f:"Glen",l:"Dace II",y:1995},
-  {f:"Glenn",l:"Wilson",y:null},{f:"Greer",l:"Adams",y:null},{f:"India",l:"",y:null},
-  {f:"Inga",l:"Collins",y:null},{f:"Jami",l:"C.",y:null},{f:"Janel",l:"Bailey Wheeler",y:null},
-  {f:"Jasmine",l:"B.",y:null},{f:"Jasmine",l:"Collins",y:null},{f:"Jasmine",l:"W.",y:null},
-  {f:"Jeanine",l:"Plante",y:null},{f:"Jennifer",l:"",y:null},{f:"Jennifer",l:"Willis",y:null},
-  {f:"Jessica",l:"Bolden",y:null},{f:"Jolene",l:"Williams",y:null},{f:"Joni",l:"Freeman",y:null},
-  {f:"Jovande",l:"Young",y:null},{f:"Joyce",l:"Brown",y:null},{f:"Joynell",l:"Bean",y:null},
-  {f:"Kaina",l:"Steward",y:null},{f:"Kareema",l:"Sullivan",y:null},{f:"Karen",l:"Bradley Wells",y:null},
-  {f:"Karen",l:"Whitfield",y:null},{f:"Karon",l:"Hampton",y:null},{f:"Kathleen",l:"Kennedy",y:null},
-  {f:"Katrina",l:"Harper",y:null},{f:"Katrina",l:"Nguyen",y:null},{f:"Keeyan",l:"D.",y:null},
-  {f:"Kei",l:"Culver",y:null},{f:"Keidre",l:"Carter",y:null},{f:"Keisha",l:"Taylor",y:null},
-  {f:"Kelly",l:"L.",y:null},{f:"Kelly",l:"Tillison",y:null},{f:"Ken",l:"",y:null},
-  {f:"Kendra",l:"Forbes",y:null},{f:"Kendra",l:"Lewis",y:null},{f:"Kendra",l:"Prevost",y:null},
-  {f:"Kenya",l:"Muhammad",y:null},{f:"Kenya",l:"Robinson",y:null},{f:"Keri",l:"Smith",y:null},
-  {f:"Keri",l:"Williams",y:null},{f:"Kevin",l:"Clark",y:null},{f:"Kevin",l:"Collins",y:null},
-  {f:"Kiara",l:"James",y:null},{f:"Kim",l:"Graham",y:null},{f:"Kim",l:"Harris",y:null},
-  {f:"Kimberly",l:"Francis",y:null},{f:"Kimberly",l:"Lockett",y:null},{f:"Kimberly",l:"Lyles",y:null},
-  {f:"Kraig",l:"Loyd",y:null},{f:"Kris",l:"Rogers Washington",y:null},{f:"Kristi",l:"Isaac Rapp",y:null},
-  {f:"Kristina",l:"Carter",y:null},{f:"Kyla",l:"Leon",y:null},{f:"Lachelcia",l:"Watts",y:null},
-  {f:"LaKeesha",l:"Zuniga",y:null},{f:"Larna",l:"Atkinson",y:null},{f:"LaShon",l:"Snyder Conerly",y:null},
-  {f:"LaShunda",l:"Green",y:null},{f:"Latasha",l:"Johnson",y:null},{f:"LaTecia",l:"Lewis-Smith",y:null},
-  {f:"Latosha",l:"Hickman Cherry",y:null},{f:"Lauren",l:"Day-Page",y:2014},
-  {f:"La'Kendra",l:"Bell",y:null},{f:"Leah",l:"Miller",y:null},{f:"Leslie",l:"Hill",y:null},
-  {f:"Leslie",l:"Magee",y:null},{f:"Lisa",l:"Abrams Young",y:null},{f:"Lisa",l:"Arnold",y:null},
-  {f:"Lisa",l:"Ray",y:null},{f:"Lishunda",l:"Franklin",y:null},{f:"Lovie",l:"Rodgers",y:null},
-  {f:"Lynette",l:"Dupuy",y:null},{f:"Lynnair",l:"Francis",y:null},{f:"M. Ann",l:"Berry",y:null},
-  {f:"Mac",l:"Armstrong",y:null},{f:"Maliah",l:"Mayweather",y:null},{f:"Malinda",l:"Boucree",y:null},
-  {f:"Maria",l:"Smith",y:null},{f:"Mark",l:"Prevost",y:null},{f:"Mary",l:"Gauthier-Lewis",y:null},
-  {f:"Maureen",l:"Ancar",y:null},{f:"Meagan",l:"Brown",y:null},{f:"Merica",l:"Delaney Lyons",y:null},
-  {f:"Michael",l:"Lowe",y:null},{f:"Michelle",l:"Briscoe",y:null},{f:"Michelle",l:"Easton",y:1993},
-  {f:"Michelle",l:"Hopson",y:null},{f:"Michelle",l:"Lola",y:null},{f:"Missy",l:"Burrell Allain",y:null},
-  {f:"Monica",l:"",y:null},{f:"Monica",l:"Doherty",y:null},{f:"Monica",l:"Fitts Payne",y:null},
-  {f:"Monica",l:"Miles Camp",y:null},{f:"Monica",l:"Varnado",y:null},{f:"Monique",l:"Bell",y:null},
-  {f:"Monique",l:"Lewis",y:null},{f:"Monique",l:"Norwood",y:null},{f:"Musu",l:"Kamara",y:null},
-  {f:"Natasha",l:"Smith",y:null},{f:"Natasha",l:"Walker",y:null},{f:"Nathan",l:"Terrell",y:null},
-  {f:"Nicole",l:"Harris-Walton",y:null},{f:"Niema",l:"Moore",y:null},{f:"Nija",l:"Hawthorne",y:null},
-  {f:"Nikki",l:"Brown",y:null},{f:"Nikki",l:"Robinson",y:null},{f:"Nina",l:"Broussard",y:null},
-  {f:"Nisha",l:"",y:null},{f:"Nolan",l:"Leblanc",y:null},{f:"Dwayne",l:"Steele",y:null},
-  {f:"Oluwakemi",l:"A.",y:null},{f:"Oneka",l:"Barnes",y:null},{f:"P.",l:"Glover",y:null},
-  {f:"Paul",l:"Young",y:null},{f:"Pedie",l:"Horton",y:null},{f:"Phaedra",l:"Howard Honore",y:null},
-  {f:"Jaimaya",l:"Bolden",y:null},{f:"Pheo",l:"Glover",y:null},{f:"Philecia",l:"Avery",y:null},
-  {f:"Porsche",l:"Forman",y:null},{f:"Portia",l:"Brown",y:null},{f:"Q'Wanyu",l:"Tutt",y:null},
-  {f:"Rae",l:"Smith",y:null},{f:"Ramonda",l:"McNair Howard",y:1997},{f:"Rashida",l:"FranÃ§ois",y:null},
-  {f:"Raynelle",l:"J.",y:null},{f:"Regilyn",l:"",y:null},{f:"Rekesha",l:"Harrell",y:null},
-  {f:"Renard",l:"Hill",y:null},{f:"Rhonda",l:"Denson",y:null},{f:"Robert",l:"DeFrantz",y:null},
-  {f:"Rosa",l:"Jordan",y:null},{f:"Rustin",l:"Henry",y:null},{f:"RuthAnn",l:"",y:null},
-  {f:"Ryan",l:"Lee",y:null},{f:"Samantha",l:"Gibbs",y:null},{f:"Samarlos",l:"Scott",y:null},
-  {f:"Samella",l:"Sutton",y:null},{f:"Sonya",l:"Sanders",y:null},{f:"Sandra",l:"Hudson",y:null},
-  {f:"Sandy",l:"Hunter",y:null},{f:"Shannon",l:"Douglas",y:null},{f:"Sharell",l:"Cheatham",y:null},
-  {f:"ShaRhonda",l:"Watkins-Curry",y:null},{f:"Shavitress",l:"Briggs",y:null},
-  {f:"Shelton",l:"Watkins",y:null},{f:"Shenita",l:"Outland",y:null},{f:"Sherita",l:"Castille",y:null},
-  {f:"ShontÃ©",l:"McCain",y:null},{f:"Sonya",l:"Carter",y:null},{f:"Steven",l:"Player",y:null},
-  {f:"Sylvia",l:"",y:null},{f:"Takeesa",l:"James",y:null},{f:"Tala",l:"Johnson-Burl",y:null},
-  {f:"Tamara",l:"E.",y:null},{f:"Tamarah",l:"Walker",y:null},{f:"Tamika",l:"",y:null},
-  {f:"Tamiko",l:"Hickman",y:null},{f:"Tammy",l:"Hobbs",y:null},{f:"Tammy",l:"McCray",y:null},
-  {f:"TaNesha",l:"Turner",y:null},{f:"Tarrow",l:"Seals",y:null},{f:"Tatyana",l:"Franklin",y:null},
-  {f:"Taylor",l:"C.",y:null},{f:"Taylor",l:"Parker",y:null},{f:"Tenesha",l:"Irvin",y:null},
-  {f:"Terreca",l:"Taylor Edwards",y:null},{f:"Terri",l:"",y:null},{f:"Tia",l:"Bailey",y:null},
-  {f:"Tia",l:"Thomas",y:null},{f:"Tiffany",l:"Brumfield",y:null},{f:"Tiffany",l:"Pierson",y:null},
-  {f:"Tim",l:"",y:null},{f:"Tinera",l:"Francois",y:null},{f:"Toi",l:"O.",y:null},
-  {f:"Tori",l:"Foster-Alexander",y:null},{f:"Tori",l:"Wiley",y:null},{f:"Tosin",l:"",y:null},
-  {f:"Tracie",l:"Jiles",y:null},{f:"Tremaine",l:"",y:null},{f:"Treslie",l:"W.",y:null},
-  {f:"Trevlyn",l:"Haddox",y:null},{f:"Trina",l:"Lorraine",y:null},{f:"Trisha",l:"Obinyan",y:null},
-  {f:"Tunisha",l:"Che",y:null},{f:"Tywanna",l:"Vital Gambrell",y:null},{f:"V.",l:"Burton",y:null},
-  {f:"Vasha",l:"Pittman",y:null},{f:"Veleka",l:"Jones Grady",y:2006},{f:"Victoria",l:"Walker",y:null},
-  {f:"Warren",l:"Lee",y:null},{f:"Willie",l:"Lewis",y:null},{f:"Winston",l:"Bryant",y:null},
-  {f:"Yashena",l:"Gillard",y:null},{f:"Yolan",l:"B.",y:null},{f:"Youlicea",l:"Williams",y:null},
-  {f:"Yvette",l:"King Kennedy",y:null},{f:"Yvette",l:"Pierre",y:null},{f:"Zina",l:"Jordan",y:null}
+  {f:"Arrow",l:"Anderson",y:1981},{f:"Andre",l:"Lewis",y:1988},{f:"Artie",l:"Conley",y:null},
+  {f:"Arbor",l:"Jones",y:null},{f:"Anagrace",l:"Gray",y:null},{f:"Amelia",l:"Teasdale",y:2021},
+  {f:"Araceli",l:"Lewis",y:2008},{f:"Aaron",l:"Cortez",y:1990},{f:"Annabelle",l:"Torres",y:null},
+  {f:"Ascencion",l:"Reeves",y:null},{f:"Alix",l:"Murphy",y:2002},{f:"Alan",l:"Newman",y:2009},
+  {f:"Antoinette",l:"Hernandez",y:null},{f:"Arron",l:"Shelton",y:2003},{f:"Arva",l:"Rodriguez",y:1982},
+  {f:"Asha",l:"Phillips",y:1985},{f:"Alix",l:"Peterson",y:1997},{f:"Annmarie",l:"Lee",y:2003},
+  {f:"Arthur",l:"Scott",y:2024},{f:"Arsenio",l:"Martinez",y:2018},{f:"Arlington",l:"Newman",y:null},
+  {f:"Antoinette",l:"Scott",y:2020},{f:"Ana",l:"Copeland",y:2000},{f:"Ashdod",l:"Davis",y:1994},
+  {f:"Anita",l:"Cook",y:null},{f:"Armando",l:"Teasdale",y:null},{f:"Arianne",l:"Reed",y:2021},
+  {f:"Andrew",l:"Moore",y:1995},{f:"Arlington",l:"Wright",y:2017},{f:"Arnold",l:"Cook",y:null},
+  {f:"Alma",l:"Ramirez",y:null},{f:"Albert",l:"Anderson",y:1989},{f:"Arturo",l:"Murphy",y:null},
+  {f:"Antoinette",l:"Garrett",y:2009},{f:"Arlotta",l:"Johnson",y:2023},{f:"Arturo",l:"Brooks",y:1997},
+  {f:"Annabelle",l:"Anderson",y:1998},{f:"Aretha",l:"Smith",y:1996},{f:"Ascencion",l:"Thompson",y:2012},
+  {f:"Arron",l:"Campbell",y:2020},{f:"Amelia",l:"Martin",y:2003},{f:"Arline",l:"Cresswell",y:2013},
+  {f:"Aronetta",l:"Edwards",y:null},{f:"Annmarie",l:"Parker",y:null},{f:"Armando",l:"Hernandez",y:1985},
+  {f:"Alex",l:"Cortez",y:2014},{f:"Allyson",l:"Larson",y:2010},{f:"Alyson",l:"Wright",y:2013},
+  {f:"Arbor",l:"Ramirez",y:2014},{f:"Aruell",l:"Sanchez",y:2025},{f:"Arthur",l:"Bradshaw",y:2003},
+  {f:"Arletha",l:"Cooper",y:null},{f:"Alex",l:"Reeves",y:1981},{f:"Anagrace",l:"Hubbard",y:null},
+  {f:"Arva",l:"Walton",y:null},{f:"Aisha",l:"Collins",y:1984},{f:"Angel",l:"Sutton",y:null},
+  {f:"Allyson",l:"Mendez",y:2016},{f:"Andre",l:"Howard",y:null},{f:"Alix",l:"Larson",y:2007},
+  {f:"Anya",l:"Cox",y:1983},{f:"Arsenio",l:"Gonzalez",y:1983},{f:"Annabelle",l:"Wilson",y:null},
+  {f:"Arlington",l:"Cooper",y:1988},{f:"Angel",l:"Cox",y:1995},{f:"Alexis",l:"Rivera",y:null},
+  {f:"Art",l:"Chavez",y:1980},{f:"Asaph",l:"Young",y:1990},{f:"Ariana",l:"Ramirez",y:2005},
+  {f:"Alyson",l:"Peterson",y:1980},{f:"Andrew",l:"Richardson",y:1998},{f:"Arvil",l:"Matthew",y:2022},
+  {f:"Alvin",l:"Harris",y:null},{f:"Alejandra",l:"Vargas",y:null},{f:"Anita",l:"Davis",y:1983},
+  {f:"Aric",l:"Watson",y:null},{f:"Ariel",l:"Hernandez",y:null},{f:"Alex",l:"Bridges",y:1995},
+  {f:"Armando",l:"Allen",y:2017},{f:"Arrena",l:"Hernandez",y:2006},{f:"Armando",l:"James",y:2000},
+  {f:"Amos",l:"Sutton",y:2025},{f:"Andrew",l:"Reed",y:1988},{f:"Angelina",l:"Richardson",y:2000},
+  {f:"Alexis",l:"Johnson",y:2009},{f:"Armando",l:"Gonzalez",y:1984},{f:"Aric",l:"Wright",y:1988},
+  {f:"Alex",l:"Allen",y:null},{f:"Ardell",l:"Chavez",y:2025},{f:"Art",l:"Watson",y:1980},
+  {f:"Arlotta",l:"Campbell",y:null},{f:"Alma",l:"Wright",y:1987},{f:"Asa",l:"Wood",y:null},
+  {f:"Aroula",l:"Clark",y:2025},{f:"Arturo",l:"Powers",y:1996},{f:"Andrea",l:"Miller",y:1985},
+  {f:"Angel",l:"Garcia",y:1980},{f:"Allyson",l:"Powers",y:null},{f:"Ardell",l:"Wood",y:2025},
+  {f:"Abigail",l:"Anderson",y:1984}
 ];
 
 const CITIES = ["New Orleans, LA","Houston, TX","Atlanta, GA","Baton Rouge, LA","Dallas, TX","Memphis, TN","Charlotte, NC","Chicago, IL","Washington, DC","Baltimore, MD","Birmingham, AL","Jackson, MS","San Francisco, CA","New York, NY","Philadelphia, PA","Detroit, MI","Miami, FL","Los Angeles, CA","Boston, MA","Nashville, TN"];
 
-// Survey data overrides â real info from PAG member survey (46 respondents)
-const SURVEY_OVERRIDES = {
-  "Kris|Spears":{position:"Pharmacy Manager",company:"Publix",city:"Atlanta, GA",field:"Community Pharmacy",gradYear:2000,email:"kgspirit17@gmail.com"},
-  "Kristina|Carter":{position:"Clinical Strategy Manager",company:"CareSource",city:"Atlanta, GA",field:"Managed Care",gradYear:2000,email:"Drkris1908@gmail.com"},
-  "Edward|Stemley":{position:"AVP and Associate Provost",company:"UTMB Health",city:"League City, TX",field:"Hospital / Health-System",gradYear:2000,email:"ed.stemley@gmail.com"},
-  "Britney|Woods":{position:"Senior Manager, Community Pharmacy",company:"McKesson Corporation",city:"Mansfield, TX",field:"Pharmaceutical Industry",gradYear:2008,email:"drbslindsey@gmail.com"},
-  "Tatyana|Franklin":{position:"Pharmacy Manager",company:"Walgreens",city:"New Orleans, LA",field:"Community Pharmacy",gradYear:2023,email:"tatyanafranklin92@gmail.com"},
-  "Ravin|Milton":{position:"Pharmacist in Charge",company:"TCURO Pharmacy",city:"Keene, TX",field:"Community Pharmacy",gradYear:2003,email:"ravinmilton@gmail.com"},
-  "Rosiland|Burton":{position:"Contract Pharmacist",company:"Various",city:"Texas",field:"Community Pharmacy",gradYear:2000,email:"rbatt03@apl.com"},
-  "Mary|Gauthier-Lewis":{position:"Retired Professor / Clinical Pharmacist",city:"Prairieville, LA",field:"Academia / Research",gradYear:2000,email:"Marylynngl@gmail.com"},
-  "Willie|Lewis":{position:"Staff Pharmacist",company:"Walmart",city:"Baton Rouge, LA",field:"Community Pharmacy",gradYear:2000,email:"willie_lewis@cox.net"},
-  "Katrina|Nguyen":{position:"Clinical Assistant Professor",company:"Xavier University of Louisiana",city:"New Orleans, LA",field:"Academia / Research",gradYear:2013,email:"knguye14@xula.edu"},
-  "Jovande|Young":{position:"Staff Pharmacist",city:"New Orleans, LA",field:"Community Pharmacy",gradYear:2023,email:"jovandeyoung@gmail.com"},
-  "Cedric|Cloud":{position:"Pharmacy Director",company:"United Healthcare",city:"Spring, TX",field:"Managed Care",gradYear:2003,email:"Cedriccloud74@gmail.com"},
-  "Sonya|Sanders":{position:"Registered Pharmacist",company:"Publix",city:"Mobile, AL",field:"Community Pharmacy",gradYear:2000,email:"smspharmd@gmail.com"},
-  "Kenya|Muhammad":{position:"Clinical Pharmacist MTM",company:"Walmart",city:"Lantana, TX",field:"Community Pharmacy",gradYear:2003,email:"kenyamuhammad@hotmail.com"},
-  "Denise|Coleman":{position:"Pharmacist (Transitioning)",city:"Houston, TX",field:"Community Pharmacy",gradYear:2000,email:"denise.a.coleman98@gmail.com"},
-  "Steven|Player":{position:"VP, Belonging and Inclusion",company:"BJC Health",city:"St. Louis, MO",field:"Hospital / Health-System",gradYear:2000,email:"drplayer1998@gmail.com"},
-  "Calvin|Magee":{position:"Owner / Pharmacist",company:"General Meyer Pharmacy",city:"New Orleans, LA",field:"Community Pharmacy",gradYear:2000,email:"calvinmageejr@gmail.com"},
-  "Brittany|Bush":{position:"Clinical Staff Pharmacist",company:"XULA College of Pharmacy",city:"New Orleans, LA",field:"Ambulatory Care",gradYear:2023,email:"Brittanybush29@yahoo.com"},
-  "Kris|Rogers Washington":{position:"Sr Dir, Medical Training & Field Excellence",company:"Sarepta",city:"Baton Rouge, LA",field:"Pharmaceutical Industry",gradYear:2000,email:"karpharmd@gmail.com"},
-  "Toi|O.":{position:"Senior Clinical Consultant",company:"OptumRx",city:"Plano, TX",field:"Managed Care",gradYear:2003,email:"Tolden7948@aol.com"},
-  "Ayana|Henderson":{position:"Senior Director",company:"Eli Lilly and Company",city:"Indianapolis, IN",field:"Pharmaceutical Industry",gradYear:2003,email:"Ayana.rowley@gmail.com"},
-  "Kraig|Loyd":{position:"Clinical Pharmacist",city:"Dallas, TX",field:"Managed Care",gradYear:2003,email:"kraigloyd@gmail.com"},
-  "TaNesha|Turner":{position:"Assistant Pharmacy Manager",city:"Frisco, TX",field:"Community Pharmacy",gradYear:2008,email:"tlst0279@gmail.com"},
-  "Karen|Whitfield":{position:"Clinical Pharmacist / Patient Advocate",company:"Department of Veteran Affairs",city:"Highland, IN",field:"Public Health Pharmacy",gradYear:2000,email:"karenvision2020@gmail.com"},
-  "Charles|M.":{position:"Senior Medical Science Liaison",company:"Eisai",city:"Marrero, LA",field:"Pharmaceutical Industry",gradYear:2013,email:"cmasoniiirph@yahoo.com"},
-  "Erika|Wilson":{position:"Pharmacy Director",company:"UTHealth Houston",city:"Houston, TX",field:"Hospital / Health-System",gradYear:2008,email:"Erikawilsonpharmd@gmail.com"},
-  "Kyla|Leon":{position:"Neuroscience ICU Pharmacist",company:"University of Mississippi Medical Center",city:"Brandon, MS",field:"Hospital / Health-System",gradYear:2013,email:"kyla.a.leon@gmail.com"},
-  "Eden|Keller":{position:"Clinical Assistant Professor / Pharmacist",company:"University of Illinois Chicago",city:"Chicago, IL",field:"Hospital / Health-System",gradYear:2018,email:"ekeller@uic.edu"},
-  "Dawn|L.R.":{position:"Staff Pharmacist",company:"Cook County Health",city:"Chicago, IL",field:"Community Pharmacy",gradYear:2000,email:"dalewru@gmail.com"},
-  "V.|Burton":{position:"Clinical Pharmacist",company:"Encompass Health",city:"Irving, TX",field:"Hospital / Health-System",gradYear:2000,email:"vb.scieng2@gmail.com"},
-  "Ramonda|McNair Howard":{position:"Pharmacy Manager",company:"Publix Supermarket",city:"Conyers, GA",field:"Community Pharmacy",gradYear:2000,email:"rrmcnair@aol.com"},
-  "Shenita|Outland":{position:"Clinical Consultant",company:"Clearlink Partners",city:"Houston, TX",field:"Managed Care",gradYear:2008,email:"droutland06@gmail.com"},
-  "Robin|Vidal":{position:"Director of Experiential Education",company:"William Carey University",city:"New Orleans, LA",field:"Academia / Research",gradYear:2008,email:"robinrvidal@yahoo.com"},
-  "Demorea|Harper":{position:"Pharmacy Manager",company:"CVS",city:"Kennesaw, GA",field:"Community Pharmacy",gradYear:2000,email:"demoreaharper@gmail.com"},
-};
+// No survey overrides - all data is fictional except D.J.
+const SURVEY_OVERRIDES = {};
 
 function seededRandom(seed) {
   let s = seed;
@@ -319,7 +208,7 @@ ALUMNI_DATA.unshift({
   hasSurveyData: true
 });
 
-// âââ ICONS (inline SVG) âââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ ICONS (inline SVG) Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 const Icon = ({d, size=20, color="currentColor", ...props}) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
     stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -344,7 +233,7 @@ const GridIcon = (p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0
 const ListIcon = (p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="18" r="1" fill="currentColor"/></svg>;
 const StarIcon = (p) => <svg width={p.size||16} height={p.size||16} viewBox="0 0 24 24" fill={p.filled?"var(--gold)":"none"} stroke={p.filled?"var(--gold)":"currentColor"} strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>;
 
-// âââ COMPONENTS âââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ COMPONENTS Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 function StatCard({icon, label, value, accent}) {
   return (
     <div style={{
@@ -573,7 +462,7 @@ function ContactModal({person, onClose}) {
             <div>
               <div style={{fontWeight:600}}>{person.firstName} {person.lastName}</div>
               <div style={{fontSize:13,color:'var(--text-secondary)'}}>{person.position} at {person.company}</div>
-              <div style={{fontSize:12,color:'var(--text-muted)'}}>Class of {person.gradYear} Â· {person.city}</div>
+              <div style={{fontSize:12,color:'var(--text-muted)'}}>Class of {person.gradYear} ÃÂ· {person.city}</div>
             </div>
           </div>
           <label style={{display:'block',fontSize:13,fontWeight:600,color:'var(--text-secondary)',marginBottom:6}}>Your Message</label>
@@ -641,7 +530,7 @@ function UploadModal({onClose}) {
             <div style={{fontWeight:600,fontSize:15,marginBottom:4}}>Drop your file here or click to upload</div>
             <div style={{fontSize:13,color:'var(--text-muted)'}}>Accepts: PDF resume, LinkedIn profile export, or .txt</div>
           </div>
-          <div style={{textAlign:'center',color:'var(--text-muted)',fontSize:13,marginBottom:16}}>â or paste your LinkedIn URL â</div>
+          <div style={{textAlign:'center',color:'var(--text-muted)',fontSize:13,marginBottom:16}}>Ã¢ÂÂ or paste your LinkedIn URL Ã¢ÂÂ</div>
           <div style={{display:'flex',gap:8}}>
             <input placeholder="https://linkedin.com/in/yourprofile" style={{
               flex:1,padding:'10px 14px',border:'1.5px solid var(--border)',borderRadius:'var(--radius)',
@@ -778,7 +667,7 @@ function InsightsPanel({data}) {
   );
 }
 
-// âââ MAIN APP âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ MAIN APP Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 function App() {
   const [search, setSearch] = useState('');
   const [fieldFilter, setFieldFilter] = useState('');
@@ -831,7 +720,7 @@ function App() {
 
   return (
     <div style={{minHeight:'100vh',display:'flex',flexDirection:'column'}}>
-      {/* ââ HEADER ââ */}
+      {/* Ã¢ÂÂÃ¢ÂÂ HEADER Ã¢ÂÂÃ¢ÂÂ */}
       <header style={{
         background:'var(--navy)',color:'#fff',position:'sticky',top:0,zIndex:100,
         boxShadow:'0 2px 20px rgba(10,22,40,0.3)'
@@ -873,7 +762,7 @@ function App() {
         </div>
       </header>
 
-      {/* ââ HERO BANNER ââ */}
+      {/* Ã¢ÂÂÃ¢ÂÂ HERO BANNER Ã¢ÂÂÃ¢ÂÂ */}
       <div style={{
         background:'linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 50%, var(--navy-mid) 100%)',
         padding:'36px 28px 32px',position:'relative',overflow:'hidden'
@@ -930,7 +819,7 @@ function App() {
         </div>
       </div>
 
-      {/* ââ FILTERS ââ */}
+      {/* Ã¢ÂÂÃ¢ÂÂ FILTERS Ã¢ÂÂÃ¢ÂÂ */}
       {showFilters && activeTab === 'directory' && (
         <div className="animate-fade" style={{
           background:'var(--white)',borderBottom:'1px solid var(--border-light)',
@@ -955,7 +844,7 @@ function App() {
         </div>
       )}
 
-      {/* ââ CONTENT ââ */}
+      {/* Ã¢ÂÂÃ¢ÂÂ CONTENT Ã¢ÂÂÃ¢ÂÂ */}
       <main style={{flex:1,maxWidth:1320,margin:'0 auto',padding:'24px 28px',width:'100%'}}>
         {activeTab === 'directory' && (
           <>
@@ -981,7 +870,7 @@ function App() {
             {/* Results */}
             {filtered.length === 0 ? (
               <div style={{textAlign:'center',padding:'60px 20px'}}>
-                <div style={{fontSize:48,marginBottom:12}}>ð</div>
+                <div style={{fontSize:48,marginBottom:12}}>Ã°ÂÂÂ</div>
                 <h3 style={{fontSize:18,fontWeight:600,marginBottom:8}}>No alumni found</h3>
                 <p style={{color:'var(--text-muted)',fontSize:14,marginBottom:16}}>Try adjusting your filters or search terms.</p>
                 <button onClick={clearFilters} style={{padding:'10px 20px',borderRadius:'var(--radius)',border:'none',background:'var(--navy)',color:'#fff',fontSize:14,fontWeight:600}}>Clear All Filters</button>
@@ -1025,7 +914,7 @@ function App() {
         {activeTab === 'insights' && <InsightsPanel data={filtered}/>}
       </main>
 
-      {/* ââ STATS BAR ââ */}
+      {/* Ã¢ÂÂÃ¢ÂÂ STATS BAR Ã¢ÂÂÃ¢ÂÂ */}
       <div style={{background:'var(--white)',borderTop:'1px solid var(--border-light)',padding:'16px 28px'}}>
         <div style={{maxWidth:1320,margin:'0 auto',display:'grid',gridTemplateColumns:'repeat(4, 1fr)',gap:16}}>
           <StatCard icon={<GraduationIcon size={22}/>} label="Total Alumni" value={ALUMNI_DATA.length}/>
@@ -1036,14 +925,14 @@ function App() {
         </div>
       </div>
 
-      {/* ââ FOOTER ââ */}
+      {/* Ã¢ÂÂÃ¢ÂÂ FOOTER Ã¢ÂÂÃ¢ÂÂ */}
       <footer style={{background:'var(--navy)',color:'rgba(255,255,255,0.5)',padding:'20px 28px',fontSize:12,textAlign:'center'}}>
         <div style={{maxWidth:1320,margin:'0 auto'}}>
-          XUPharmConnect â A Vision for the Affinity Group Â· Xavier University of Louisiana College of Pharmacy Â· Powered by XULA Alumni
+          XUPharmConnect Ã¢ÂÂ A Vision for the Affinity Group ÃÂ· Xavier University of Louisiana College of Pharmacy ÃÂ· Powered by XULA Alumni
         </div>
       </footer>
 
-      {/* ââ MODALS ââ */}
+      {/* Ã¢ÂÂÃ¢ÂÂ MODALS Ã¢ÂÂÃ¢ÂÂ */}
       {contactPerson && <ContactModal person={contactPerson} onClose={()=>setContactPerson(null)}/>}
       {showUpload && <UploadModal onClose={()=>setShowUpload(false)}/>}
     </div>
